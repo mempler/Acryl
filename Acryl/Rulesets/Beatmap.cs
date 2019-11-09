@@ -248,6 +248,9 @@ namespace Acryl.Rulesets
                         if (hitObjColIndex >= Colors.Count)
                             hitObjColIndex = 0;
                         
+                        if (Colors.Count == 0)
+                            Colors.AddRange(SkinManager.SkinColors);
+                        
                         hitObjectColor = Colors[hitObjColIndex];
                     }
 
