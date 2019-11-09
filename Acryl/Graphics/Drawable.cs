@@ -58,9 +58,16 @@ namespace Acryl.Graphics
             foreach (var child in Children) // Iterate through Child and it's Children to Draw a Frame
                 child.UpdateFrame(gameTime);
         }
-        
-        protected abstract void Draw(SpriteBatch spriteBatch, GameTime gameTime);
-        protected abstract void Update(GameTime gameTime);
+
+        protected virtual void Draw(SpriteBatch spriteBatch, GameTime gameTime)
+        {
+            
+        }
+
+        protected virtual void Update(GameTime gameTime)
+        {
+            
+        }
         
         /// <summary>
         /// 
