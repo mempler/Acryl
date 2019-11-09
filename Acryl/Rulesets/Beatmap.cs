@@ -212,11 +212,15 @@ namespace Acryl.Rulesets
                     switch (l[0])
                     {
                         case "0":
-                            using (var fs = File.OpenRead(Path.GetDirectoryName(path) + "/" +
-                                                          l[2] // Remove Quotes 
-                                                              .Remove(0, 1)
-                                                              .Remove(l[2].Length -2, 1)
-                                                          ))
+                            var backgroundPath = Path.GetDirectoryName(path) + "/" +
+                                                 l[2] // Remove Quotes 
+                                                     .Remove(0, 1)
+                                                     .Remove(l[2].Length -2, 1);
+                            
+                            if (!File.Exists(backgroundPath))
+                                continue;
+                            
+                            using (var fs = File.OpenRead(backgroundPath))
                             {
                                 var tex = Texture2D.FromStream(AcrylGame.Game.GraphicsDevice,
                                     fs);
