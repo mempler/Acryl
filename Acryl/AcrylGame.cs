@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Acryl.Audio;
 using Acryl.Extension.Discord;
 using Acryl.Graphics;
+using Acryl.Graphics.Scenes;
 using Acryl.Helpers;
 using Acryl.Scenes;
 using Acryl.Scenes.Tests;
@@ -75,11 +76,11 @@ namespace Acryl
 
         protected override void LoadContent()
         {
-            DefaultFont = Content.Load<SpriteFont>("Fonts/Arial");
+            DefaultFont = Content.Load<SpriteFont>("Fonts/Exo-Regular");
             SpriteBatch = new SpriteBatch(GraphicsDevice);
             
             //ActiveScene = new GamePlayScene();
-            ActiveScene = new PrimitiveScene();
+            ActiveScene = new GamePlayScene();
             ActiveScene.SwitchTo(ActiveScene);
         }
 

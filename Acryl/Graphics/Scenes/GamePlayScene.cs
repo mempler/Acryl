@@ -2,13 +2,12 @@ using System;
 using System.IO;
 using System.Linq;
 using Acryl.Extension.Discord;
-using Acryl.Graphics;
 using Acryl.Graphics.Elements;
 using Acryl.Rulesets;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Acryl.Scenes
+namespace Acryl.Graphics.Scenes
 {
     public class GamePlayScene : Scene
     {
@@ -16,7 +15,17 @@ namespace Acryl.Scenes
         private FpsCounterDisplay fpsCounter = new FpsCounterDisplay();
         
         private const double Start = 0; // Skip 30 seconds
-            
+
+        // we use our own Begin and End function!
+        public override void Begin(SpriteBatch batch)
+        {
+            //base.Begin(batch);
+        }
+        public override void End(SpriteBatch batch)
+        {
+            //base.End(batch);
+        }
+
         public GamePlayScene()
         {
             BeatmapManager.ActiveBeatmap = Beatmap.ReadBeatmap(
