@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Acryl", "Acryl\Acryl.csproj", "{6CFCE810-ED2C-4B9A-A50B-C7B67D73D7C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Acryl.NativeLibs", "Acryl.NativeLibs\Acryl.NativeLibs.csproj", "{5A3763E3-3178-4664-8163-B274440AA5CA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Release|Any CPU = Release|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6CFCE810-ED2C-4B9A-A50B-C7B67D73D7C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CFCE810-ED2C-4B9A-A50B-C7B67D73D7C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CFCE810-ED2C-4B9A-A50B-C7B67D73D7C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CFCE810-ED2C-4B9A-A50B-C7B67D73D7C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A3763E3-3178-4664-8163-B274440AA5CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A3763E3-3178-4664-8163-B274440AA5CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A3763E3-3178-4664-8163-B274440AA5CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A3763E3-3178-4664-8163-B274440AA5CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    
+    <PropertyGroup Label="Project">
+        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <OutputType>Library</OutputType>
+        <AssemblyTitle>Acryl Libraries</AssemblyTitle>
+        <AssemblyName>ACryl.NativeLibs</AssemblyName>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    </PropertyGroup>
+
+    <PropertyGroup Label="Nuget">
+        <IsPackable>true</IsPackable>
+        <Title>Acryl Libraries</Title>
+        <Description>Native libraries for ACryl</Description>
+        <PackageId>ACryl.NativeLibs</PackageId>
+        <PackageTags>acryl libraries</PackageTags>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <None Include="runtimes\**\*">
+            <Pack>true</Pack>
+            <PackagePath>runtimes</PackagePath>
+        </None>
+
+        <None Include="_._">
+            <Pack>true</Pack>
+            <PackagePath>lib\$(TargetFramework)</PackagePath>
+        </None>
+    </ItemGroup>
+    
+</Project>
