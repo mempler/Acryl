@@ -17,10 +17,10 @@ namespace Acryl.Audio
             set => Bass.ChannelSetAttribute(stream, ChannelAttribute.Volume, value);
         }
         
-        public long Position
+        public double Position
         {
-            get => Bass.ChannelGetPosition(stream);
-            set => Bass.ChannelSetPosition(stream, value);
+            get => Bass.ChannelBytes2Seconds(stream, Bass.ChannelGetPosition(stream)) * 1000f;
+            set => Bass.ChannelSetPosition(stream, Bass.ChannelSeconds2Bytes(stream, value / 1000f));
         }
         
         internal AudioStream(string path)

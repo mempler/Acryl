@@ -64,6 +64,7 @@ namespace Acryl.Rulesets
         
         public AudioStream Song { get; private set; }
         public HitObject Last => HitObjects.Last();
+        public HitObject First => HitObjects.First();
 
         public double CurrentElapsed = 0d;
         public bool FreezeBeatmap = false;

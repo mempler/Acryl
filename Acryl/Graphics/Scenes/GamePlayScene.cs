@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using Acryl.Extension.Discord;
 using Acryl.Graphics.Elements;
+using Acryl.Graphics.Elements.Gameplay;
 using Acryl.Rulesets;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,6 +14,7 @@ namespace Acryl.Graphics.Scenes
     {
         public Beatmap Beatmap => BeatmapManager.ActiveBeatmap;
         private FpsCounterDisplay fpsCounter = new FpsCounterDisplay();
+        private SkipButton SkipButton = new SkipButton();
         
         private const double Start = 0; // Skip 30 seconds
 
@@ -84,12 +86,11 @@ namespace Acryl.Graphics.Scenes
                 other[i].DrawFrame(spriteBatch, gameTime);
             }
             
+            SkipButton.DrawFrame(spriteBatch, gameTime);
             fpsCounter.DrawFrame(spriteBatch, gameTime);
-            spriteBatch.End();
             spriteBatch.End();
         }
         
-        private double _elapsed = Start;
         protected override void Update(GameTime gameTime)
         {
             if (!Beatmap.Song.IsPlaying) {
@@ -98,17 +99,20 @@ namespace Acryl.Graphics.Scenes
             }
 
             if (!Beatmap.FreezeBeatmap)
-            {
-                _elapsed += gameTime.ElapsedGameTime.TotalMilliseconds;
-            }
+                Beatmap.CurrentElapsed += gameTime.ElapsedGameTime.TotalMilliseconds;
             
-            Beatmap.CurrentElapsed = _elapsed;
             Beatmap.CurrentTimingPoint = Beatmap.TimingPoints.LastOrDefault(x => x.Offset > Beatmap.CurrentElapsed);
+
+            if (Beatmap.CurrentElapsed > Beatmap.Song.Position + 100f ||
+                Beatmap.CurrentElapsed < Beatmap.Song.Position - 100f)
+                Beatmap.Song.Position = Beatmap.CurrentElapsed;
+            
             for (var i = Beatmap.HitObjects.Count - 1; i > 0; i--) {
                 Beatmap.HitObjects[i].UpdateFrame(gameTime);
             }
             
             fpsCounter.UpdateFrame(gameTime);
+            SkipButton.UpdateFrame(gameTime);
         }
     }
 }
