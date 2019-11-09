@@ -11,6 +11,7 @@ namespace Acryl.Graphics.Elements
         {
             Texture = tex;
         }
+        
         public Texture2D Texture { get; set; }
         
         protected override void Update(GameTime gameTime)
@@ -76,6 +77,5 @@ namespace Acryl.Graphics.Elements
         {
             return x.Texture;
         }
-
     }
 }

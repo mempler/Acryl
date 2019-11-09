@@ -41,8 +41,10 @@ namespace Acryl.Graphics.Skin
 
             var skinElementPath = Path.Combine(AcrylGame.AcrylDirectory, $"Skins/{SkinName}/{element}.png");
             if (File.Exists(skinElementPath))
-                using (var fs = File.OpenRead(skinElementPath))
-                    tex = Texture2D.FromStream(AcrylGame.Game.GraphicsDevice, fs);
+            {
+                using var fs = File.OpenRead(skinElementPath);
+                tex = Texture2D.FromStream(AcrylGame.Game.GraphicsDevice, fs);
+            }
             else
                 tex = AcrylGame.Game.Content.Load<Texture2D>("SkinnableTextures/" + element);
 

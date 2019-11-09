@@ -66,10 +66,19 @@ namespace Acryl.Graphics.Scenes
             var sliders = Beatmap.HitObjects.Where(obj => obj.Kind == HitObjectKind.Slider).ToList();
             var other = Beatmap.HitObjects.Where(obj => obj.Kind != HitObjectKind.Slider).ToList();
             
+            // Sliders are special, they need to be drawn differently.
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
-            Beatmap.Background.DrawFrame(spriteBatch, gameTime);
-            Beatmap.Background.Alpha = .4f;
+            // We render them backward to fix some Z Axis issues.
+            for (var i = sliders.Count - 1; i > 0; i--) {
+                sliders[i].DrawFrame(spriteBatch, gameTime);
+            }
+            spriteBatch.End();
             
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
+            Beatmap.Background?.DrawFrame(spriteBatch, gameTime);
+            if (Beatmap.Background != null)
+                Beatmap.Background.Alpha = .4f;
+
             // We render them backward to fix some Z Axis issues.
             for (var i = other.Count - 1; i > 0; i--) {
                 other[i].DrawFrame(spriteBatch, gameTime);
@@ -77,13 +86,6 @@ namespace Acryl.Graphics.Scenes
             
             fpsCounter.DrawFrame(spriteBatch, gameTime);
             spriteBatch.End();
-            
-            // Sliders are special, they need to be drawn differently.
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
-            // We render them backward to fix some Z Axis issues.
-            for (var i = sliders.Count - 1; i > 0; i--) {
-                sliders[i].DrawFrame(spriteBatch, gameTime);
-            }
             spriteBatch.End();
         }
         
