@@ -18,13 +18,13 @@ namespace Acryl.Rulesets
     }
 
     public class Difficulty {
-        public float CircleSize;
-        public float ApproachRate;
-        public float OverallDifficulty;
+        public double CircleSize;
+        public double ApproachRate;
+        public double OverallDifficulty;
         
         
         // Sliders
-        public float SliderMultiplier;
+        public double SliderMultiplier;
     }
 
     public struct TimingPoint
@@ -164,13 +164,13 @@ namespace Acryl.Rulesets
                 if (difficulty)
                 {
                     if (line.StartsWith("CircleSize:"))
-                        Difficulty.CircleSize = float.Parse(line.Split("CircleSize:")[1].Trim());
+                        Difficulty.CircleSize = double.Parse(line.Split("CircleSize:")[1].Trim());
                     if (line.StartsWith("ApproachRate:"))
-                        Difficulty.ApproachRate = float.Parse(line.Split("ApproachRate:")[1].Trim());
+                        Difficulty.ApproachRate = double.Parse(line.Split("ApproachRate:")[1].Trim());
                     if (line.StartsWith("OverallDifficulty:"))
-                        Difficulty.OverallDifficulty = float.Parse(line.Split("OverallDifficulty:")[1].Trim());
+                        Difficulty.OverallDifficulty = double.Parse(line.Split("OverallDifficulty:")[1].Trim());
                     if (line.StartsWith("SliderMultiplier:"))
-                        Difficulty.SliderMultiplier = float.Parse(line.Split("SliderMultiplier:")[1].Trim());
+                        Difficulty.SliderMultiplier = double.Parse(line.Split("SliderMultiplier:")[1].Trim());
                 }
 
                 if (color)
@@ -240,8 +240,8 @@ namespace Acryl.Rulesets
                     CurrentTimingPoint = TimingPoints.FirstOrDefault();
                     
                     var l = line.Split(",");
-                    var x = float.Parse(l[0]);
-                    var y = float.Parse(l[1]);
+                    var x = double.Parse(l[0]);
+                    var y = double.Parse(l[1]);
                     var timing = int.Parse(l[2]);
                     var hitObjectType = Enum.Parse<HitObjectType>(l[3]);
                     
@@ -261,7 +261,7 @@ namespace Acryl.Rulesets
 
                     if ((hitObjectType & HitObjectType.Circle) != 0)
                     {
-                        HitObject circle = new HitCircle(new Vector2(x, y), 
+                        HitObject circle = new HitCircle(new Vector2((float) x,(float) y), 
                             hitObjectColor,
                             scale);
                         
@@ -285,19 +285,19 @@ namespace Acryl.Rulesets
                             _   => HitSliderType.Linear
                         };
 
-                        var curvePoints = new List<Vector2> {new Vector2(x, y)};
+                        var curvePoints = new List<Vector2> {new Vector2((float) x, (float) y)};
 
                         foreach (var s in sliderInfo)
                         {
                             if (!s.Contains(":"))
                                 continue;
                             
-                            var cp = s.Split(":").Select(float.Parse).ToList();
+                            var cp = s.Split(":").Select(double.Parse).ToList();
 
                             x = cp[0];
                             y = cp[1];
                             
-                            var curvePoint = new Vector2(x, y);
+                            var curvePoint = new Vector2((float) x, (float) y);
                             
                             curvePoints.Add(curvePoint);
                         }

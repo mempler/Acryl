@@ -106,9 +106,13 @@ namespace Acryl.Graphics.Scenes
             if (Beatmap.CurrentElapsed > Beatmap.Song.Position + 100f ||
                 Beatmap.CurrentElapsed < Beatmap.Song.Position - 100f)
                 Beatmap.Song.Position = Beatmap.CurrentElapsed;
-            
-            for (var i = Beatmap.HitObjects.Count - 1; i > 0; i--) {
-                Beatmap.HitObjects[i].UpdateFrame(gameTime);
+
+            var objects = Beatmap.HitObjects.Where(obj =>
+                                     Beatmap.CurrentElapsed - 5000f < obj.Timing)
+                                 .ToList();
+  
+            for (var i = objects.Count - 1; i > 0; i--) {
+                objects[i].UpdateFrame(gameTime);
             }
             
             fpsCounter.UpdateFrame(gameTime);

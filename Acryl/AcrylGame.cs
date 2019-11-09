@@ -5,8 +5,6 @@ using Acryl.Extension.Discord;
 using Acryl.Graphics;
 using Acryl.Graphics.Scenes;
 using Acryl.Helpers;
-using Acryl.Scenes;
-using Acryl.Scenes.Tests;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -55,10 +53,10 @@ namespace Acryl
             GraphicsDeviceManager.ApplyChanges();
             
             Field = new VirtualField(1280, 720);
-
+            
             Game = this;
         }
-
+        
         protected override void Initialize()
         {
             if (!Directory.Exists(Path.Combine(AcrylDirectory, "Skins")))
