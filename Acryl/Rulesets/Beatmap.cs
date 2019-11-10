@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Acryl.Audio;
+using Acryl.Graphics;
 using Acryl.Graphics.Elements;
 using Acryl.Graphics.Skin;
 using Acryl.Helpers;
@@ -226,6 +227,8 @@ namespace Acryl.Rulesets
                                 var tex = Texture2D.FromStream(AcrylGame.Game.GraphicsDevice,
                                     fs);
                                 Background = new Sprite(tex);
+                                Background.PositionOrigin = Origin.Center;
+                                Background.Origin = Origin.Center;
                                 Background.Scale = AcrylGame.Field.ApplyScale(Background);
                             }
                             break;
