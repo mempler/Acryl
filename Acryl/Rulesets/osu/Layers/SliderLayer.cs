@@ -35,7 +35,7 @@ namespace Acryl.Rulesets.osu.Layers
             AcrylGame.Game.GraphicsDevice.SetRenderTarget(null);
             
             HitSlider.BorderShader.Parameters["BorderColor"].SetValue(Color.White.ToVector4());
-            HitSlider.BorderShader.Parameters["BorderWidth"].SetValue(.005f);
+            HitSlider.BorderShader.Parameters["BorderWidth"].SetValue(.003f);
             
             spriteBatch.Begin(SpriteSortMode.Immediate,
                 BlendState.NonPremultiplied,
