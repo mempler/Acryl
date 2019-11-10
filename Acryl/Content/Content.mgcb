@@ -37,12 +37,6 @@
 /processorParam:TextureFormat=Color
 /build:AcrylSmall.png
 
-#begin Effects/BlurFilter.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Effects/BlurFilter.fx
-
 #begin Effects/Slider.fx
 /importer:EffectImporter
 /processor:EffectProcessor

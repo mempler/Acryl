@@ -57,8 +57,7 @@ namespace Acryl.Rulesets.osu.Beatmap.HitObjects
 
         protected override void Update(GameTime gameTime)
         {
-            var elapsed = Math.Max(BeatmapManager.ActiveBeatmap.CurrentElapsed,
-                BeatmapManager.ActiveBeatmap.Song.Position);
+            var elapsed = BeatmapManager.ActiveBeatmap.CurrentElapsed;
             
             Freeze = BeatmapManager.ActiveBeatmap.FreezeBeatmap;
             if (elapsed > (Timing - 250) &&

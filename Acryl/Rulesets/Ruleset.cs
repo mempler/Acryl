@@ -1,5 +1,6 @@
 using Acryl.Graphics;
 using Acryl.Graphics.Elements;
+using Acryl.Rulesets.Layers;
 
 namespace Acryl.Rulesets
 {
@@ -14,6 +15,8 @@ namespace Acryl.Rulesets
         public Ruleset()
         {
             Stack = new LayerStack();
+            
+            Stack.Push(new BackgroundLayer());
         }
     }
 }

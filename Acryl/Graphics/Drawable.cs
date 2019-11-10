@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.CompilerServices;
 using Acryl.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

@@ -1,11 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Acryl.Extension.Discord;
 using Acryl.Graphics.Elements;
-using Acryl.Graphics.Elements.Gameplay;
 using Acryl.Rulesets;
-using Acryl.Rulesets.osu.HitObjects;
+using Acryl.Rulesets.osu;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -13,21 +13,15 @@ namespace Acryl.Graphics.Scenes
 {
     public class GamePlayScene : Scene
     {
-        public Beatmap Beatmap => BeatmapManager.ActiveBeatmap;
+        private static Beatmap Beatmap => BeatmapManager.ActiveBeatmap;
         private FpsCounterDisplay fpsCounter = new FpsCounterDisplay();
-        private SkipButton SkipButton = new SkipButton();
-        
-        private const double Start = 0; // Skip 30 seconds
 
-        // we use our own Begin and End function!
-        public override void Begin(SpriteBatch batch)
+        public static List<Ruleset> Rulesets = new List<Ruleset>
         {
-            //base.Begin(batch);
-        }
-        public override void End(SpriteBatch batch)
-        {
-            //base.End(batch);
-        }
+            new OsuRuleset()
+        };
+
+        private const double Start = 0; // Skip 30 seconds
 
         public GamePlayScene()
         {
@@ -36,11 +30,6 @@ namespace Acryl.Graphics.Scenes
                         "BeatMaps/0/0.osu"
                     )
                 );
-
-            foreach (var obj in Beatmap.HitObjects)
-            {
-                obj.Parent = this;
-            }
             
             AcrylGame.Discord.GetActivityManager()
                    .UpdateActivity(new Activity
@@ -64,64 +53,18 @@ namespace Acryl.Graphics.Scenes
                    });
         }
         
-        private RenderTarget2D _sliderTarget;
 
         protected override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            if (_sliderTarget == null)
-                _sliderTarget = new RenderTarget2D(
-                    AcrylGame.Game.GraphicsDevice,
-                    AcrylGame.Game.GraphicsDevice.PresentationParameters.BackBufferWidth,
-                    AcrylGame.Game.GraphicsDevice.PresentationParameters.BackBufferHeight,
-                    true,
-                    AcrylGame.Game.GraphicsDevice.PresentationParameters.BackBufferFormat,
-                    DepthFormat.Depth24Stencil8, 8, RenderTargetUsage.DiscardContents);
-            
-            var sliders = Beatmap.HitObjects.Where(obj => obj.Kind == HitObjectKind.Slider).ToList();
-            var other = Beatmap.HitObjects.Where(obj => obj.Kind != HitObjectKind.Slider).ToList();
-            
-            //////////////////
-            // Draw our Slider into _sliderTarget
-            //////////////////
-            AcrylGame.Game.GraphicsDevice.SetRenderTarget(_sliderTarget);
-            AcrylGame.Game.GraphicsDevice.Clear(Color.Transparent);
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
-            for (var i = sliders.Count - 1; i > 0; i--) {
-                sliders[i].DrawFrame(spriteBatch, gameTime);
-            }
-            spriteBatch.End();
-            AcrylGame.Game.GraphicsDevice.SetRenderTarget(null);
-            
-            //////////////////
-            // Draw our Background Image
-            //////////////////
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
-            Beatmap.Background?.DrawFrame(spriteBatch, gameTime);
-            if (Beatmap.Background != null)
-                Beatmap.Background.Alpha = .4f;
-            spriteBatch.End();
-   
-            HitSlider.BorderShader.Parameters["BorderColor"].SetValue(Color.White.ToVector4());
-            HitSlider.BorderShader.Parameters["BorderWidth"].SetValue(.005f);
-            
+            Rulesets[Beatmap.RulesetId].DrawFrame(spriteBatch, gameTime);
+
+            // Draw everything else ontop of the Ruleset Layer.
             spriteBatch.Begin(SpriteSortMode.Deferred,
-                BlendState.NonPremultiplied,
-                effect: HitSlider.BorderShader,
-                samplerState: SamplerState.AnisotropicWrap);
-            spriteBatch.Draw(_sliderTarget, new Rectangle(0, 0, 1280, 720), Color.White);
-            spriteBatch.End();
+                BlendState.NonPremultiplied);
 
-
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
-            // We render them backward to fix some Z Axis issues.
-            for (var i = other.Count - 1; i > 0; i--) {
-                other[i].DrawFrame(spriteBatch, gameTime);
-            }
-            
-            SkipButton.DrawFrame(spriteBatch, gameTime);
             fpsCounter.DrawFrame(spriteBatch, gameTime);
-            spriteBatch.End();
             
+            spriteBatch.End();
         }
         
         protected override void Update(GameTime gameTime)
@@ -130,26 +73,20 @@ namespace Acryl.Graphics.Scenes
                 Beatmap.Song.Volume = .1f;
                 Beatmap.Song.Play();
             }
-
-            if (!Beatmap.FreezeBeatmap)
-                Beatmap.CurrentElapsed += gameTime.ElapsedGameTime.TotalMilliseconds;
+            
+            Beatmap.CurrentElapsed += gameTime.ElapsedGameTime.TotalMilliseconds;
             
             Beatmap.CurrentTimingPoint = Beatmap.TimingPoints.LastOrDefault(x => x.Offset > Beatmap.CurrentElapsed);
 
-            if (Beatmap.CurrentElapsed > Beatmap.Song.Position + 100f ||
-                Beatmap.CurrentElapsed < Beatmap.Song.Position - 100f)
+            var songPosition = Beatmap.Song.Position;
+            // Audio Resynchronization if we're going too far away. > cause by Lag.
+            if (Beatmap.CurrentElapsed > songPosition + 100f ||
+                Beatmap.CurrentElapsed < songPosition - 100f)
                 Beatmap.Song.Position = Beatmap.CurrentElapsed;
 
-            var objects = Beatmap.HitObjects.Where(obj =>
-                                     Beatmap.CurrentElapsed - 5000f < obj.Timing)
-                                 .ToList();
-  
-            for (var i = objects.Count - 1; i > 0; i--) {
-                objects[i].UpdateFrame(gameTime);
-            }
+            Rulesets[Beatmap.RulesetId].UpdateFrame(gameTime);
             
             fpsCounter.UpdateFrame(gameTime);
-            SkipButton.UpdateFrame(gameTime);
         }
     }
 }

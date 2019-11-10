@@ -18,9 +18,8 @@ namespace Acryl.Rulesets
             var paddingX = adjustedX / 8;
             var paddingY = screenHeight / 8;
 
-            var (x, y) = virtualField;
-            var newValueX = x * (adjustedX - paddingX - paddingX) / 512f + paddingX + (screenWidth - adjustedX) / 2f;
-            var newValueY = y * screenHeight / 512f + paddingY;
+            var newValueX = virtualField.X * (adjustedX - paddingX - paddingX) / 512f + paddingX + (screenWidth - adjustedX) / 2f;
+            var newValueY = virtualField.Y * screenHeight / 512f + paddingY;
             return new Vector2(newValueX, newValueY);
         }
     }

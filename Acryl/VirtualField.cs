@@ -26,14 +26,13 @@ namespace Acryl
         public Vector2 ApplyScale(Vector2 original) // Converts scale to Virtual Scale && applies to Screen Scale
         {
             var fieldAspect = Width / Height;
-            var (width, height) = original;
-            var originalAspect = width / height;
+            var originalAspect = original.X / original.Y;
             
             float scaleFactor;
             if (fieldAspect > originalAspect)
-                scaleFactor = Height / height;
+                scaleFactor = Height / original.Y;
             else
-                scaleFactor = Width / width;
+                scaleFactor = Width / original.X;
 
             return new Vector2(scaleFactor);
         }

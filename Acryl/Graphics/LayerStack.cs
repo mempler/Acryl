@@ -19,6 +19,11 @@ namespace Acryl.Graphics
     {
         public List<Layer> Layers { get; }
         
+        public LayerStack()
+        {
+            Layers = new List<Layer>();
+        }
+        
         public void Push(Layer layer)
         {
             Layers.Add(layer);

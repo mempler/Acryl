@@ -1,7 +1,5 @@
-using Acryl.Graphics.Skin;
 using Acryl.Rulesets;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace Acryl.Graphics.Elements.Gameplay

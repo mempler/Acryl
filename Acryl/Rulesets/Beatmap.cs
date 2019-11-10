@@ -6,7 +6,6 @@ using Acryl.Audio;
 using Acryl.Graphics;
 using Acryl.Graphics.Elements;
 using Acryl.Graphics.Skin;
-using Acryl.Helpers;
 using Acryl.Rulesets.osu.Beatmap.HitObjects;
 using Acryl.Rulesets.osu.HitObjects;
 using Microsoft.Xna.Framework;
@@ -63,6 +62,8 @@ namespace Acryl.Rulesets
         public readonly Difficulty Difficulty = new Difficulty();
         public readonly List<Color> Colors = new List<Color>();
         public List<TimingPoint> TimingPoints = new List<TimingPoint>();
+
+        public const int RulesetId = 0;
         
         public AudioStream Song { get; private set; }
         public HitObject Last => HitObjects.Last();

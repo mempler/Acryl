@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Threading.Tasks;
 using Acryl.Audio;
 using Acryl.Extension.Discord;
 using Acryl.Graphics;
@@ -30,9 +29,6 @@ namespace Acryl
         
         public static SpriteFont DefaultFont { get; set; }
         
-                
-        public static BloomFilter BloomFilter = new BloomFilter();
-
         protected override void Dispose(bool disposing)
         {
             AudioEngine?.Dispose();
@@ -42,7 +38,20 @@ namespace Acryl
 
         public AcrylGame()
         {
-            GraphicsDeviceManager = new GraphicsDeviceManager(this);
+            GraphicsDeviceManager = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferWidth = 1280,
+                PreferredBackBufferHeight = 720,
+                SynchronizeWithVerticalRetrace = false,
+                PreferMultiSampling = true,
+            };
+
+            GraphicsDeviceManager.PreparingDeviceSettings += (sender, args) =>
+                args.GraphicsDeviceInformation.PresentationParameters.RenderTargetUsage =
+                    RenderTargetUsage.PlatformContents;
+
+            GraphicsDeviceManager.ApplyChanges();
+
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
@@ -60,22 +69,15 @@ namespace Acryl
             if (!Directory.Exists(Path.Combine(AcrylDirectory, "BeatMaps")))
                 Directory.CreateDirectory(Path.Combine(AcrylDirectory, "BeatMaps"));
             
+            GraphicsDevice.RasterizerState = new RasterizerState { CullMode = CullMode.None, MultiSampleAntiAlias = true };
+            GraphicsDevice.BlendState = new BlendState() { AlphaSourceBlend = Blend.SourceAlpha, AlphaDestinationBlend = Blend.InverseSourceColor, ColorSourceBlend = Blend.SourceAlpha, ColorDestinationBlend = Blend.InverseSourceAlpha };
+            
+            
             AudioEngine = new AudioEngine();
             
             Discord = new Discord(641308731367489536, (ulong) CreateFlags.NoRequireDiscord);
-
-            GraphicsDeviceManager.PreferredBackBufferWidth = 1280;
-            GraphicsDeviceManager.PreferredBackBufferHeight = 720;
-            GraphicsDeviceManager.PreferMultiSampling = true;
-            GraphicsDeviceManager.SynchronizeWithVerticalRetrace = false;
-            GraphicsDeviceManager.GraphicsProfile = GraphicsProfile.HiDef;
             
-            GraphicsDeviceManager.PreparingDeviceSettings += (sender, args) =>
-            {
-                args.GraphicsDeviceInformation.PresentationParameters.MultiSampleCount = 8;
-            };
-            
-            GraphicsDeviceManager.ApplyChanges();
+            //GraphicsDeviceManager.ApplyChanges();
 
             Window.Title = "Acryl";
             base.Initialize();
@@ -89,33 +91,28 @@ namespace Acryl
             //ActiveScene = new GamePlayScene();
             ActiveScene = new GamePlayScene();
             ActiveScene.SwitchTo(ActiveScene);
-            
-            BloomFilter.Load(GraphicsDevice, Content, 1280, 720);
         }
 
-        protected override async void Update(GameTime gameTime)
+        protected override void Update(GameTime gameTime)
         {
-            await Task.Run(() =>
-            {
-                if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-                    Keyboard.GetState().IsKeyDown(Keys.Escape))
-                    Exit();
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
                 
-                /* TODO: Swap to Fullscreen
-                if (Keyboard.GetState().IsKeyDown(Keys.RightAlt) &&
-                    Keyboard.GetState().IsKeyDown(Keys.Enter))
-                    Exit();
-                */
+            /* TODO: Swap to Fullscreen
+            if (Keyboard.GetState().IsKeyDown(Keys.RightAlt) &&
+                Keyboard.GetState().IsKeyDown(Keys.Enter))
+                Exit();
+            */
 
-                UpdateGameTime = gameTime;
+            UpdateGameTime = gameTime;
 
-                // TODO: Add your update logic here
-                Easing.Update(gameTime);
+            // TODO: Add your update logic here
+            Easing.Update(gameTime);
 
-                ActiveScene.UpdateFrame(gameTime);
+            ActiveScene.UpdateFrame(gameTime);
 
-                base.Update(gameTime);
-            });
+            base.Update(gameTime);
         }
         
         protected override void Draw(GameTime gameTime)
@@ -123,10 +120,8 @@ namespace Acryl
             //GraphicsDevice.Clear(Color.DarkSlateGray);
             GraphicsDevice.Clear(Color.Transparent);
             
-            ActiveScene.Begin(SpriteBatch);
             ActiveScene.DrawFrame(SpriteBatch, gameTime);
-            ActiveScene.End(SpriteBatch);
-            
+
             base.Draw(gameTime);
                         
             Discord.RunCallbacks();
