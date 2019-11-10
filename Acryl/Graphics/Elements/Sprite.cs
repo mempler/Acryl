@@ -54,33 +54,33 @@ namespace Acryl.Graphics.Elements
                     origin.X = Texture.Width / 2f;
             }
 
-            var scaledOrigin = AcrylGame.Field.ApplyScale(origin);
+            var (originScaleX, originScaleY) = AcrylGame.Field.ApplyScale(origin);
             var positionOffset = new Vector2();
             if ((PositionOrigin & Top) != 0)
                 positionOffset.X = 0;
             if ((PositionOrigin & Bottom) != 0)
-                positionOffset.Y = AcrylGame.Field.Height-scaledOrigin.Y;
+                positionOffset.Y = AcrylGame.Field.Height-originScaleY;
             
             if ((PositionOrigin & Left) != 0)
                 positionOffset.Y = 0;
             if ((PositionOrigin & Right) != 0)
-                positionOffset.X = AcrylGame.Field.Width-scaledOrigin.X;
+                positionOffset.X = AcrylGame.Field.Width-originScaleX;
             
             if ((PositionOrigin & Center) != 0) {
-                positionOffset.X = (AcrylGame.Field.Width-scaledOrigin.X) / 2f;
-                positionOffset.Y = (AcrylGame.Field.Height-scaledOrigin.Y) / 2f;
+                positionOffset.X = (AcrylGame.Field.Width-originScaleX) / 2f;
+                positionOffset.Y = (AcrylGame.Field.Height-originScaleY) / 2f;
                 
                 if ((PositionOrigin & Top) != 0)
                     positionOffset.Y = 0;
                 
                 else if ((PositionOrigin & Bottom) != 0)
-                    positionOffset.Y = AcrylGame.Field.Height-scaledOrigin.Y;
+                    positionOffset.Y = AcrylGame.Field.Height-originScaleY;
             
                 if ((PositionOrigin & Left) != 0)
                     positionOffset.Y = 0;
                 
                 else if ((PositionOrigin & Right) != 0)
-                    positionOffset.X = (AcrylGame.Field.Width-scaledOrigin.X) / 2f;
+                    positionOffset.X = (AcrylGame.Field.Width-originScaleX) / 2f;
             }
             
             spriteBatch.Draw(

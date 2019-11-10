@@ -226,9 +226,7 @@ namespace Acryl.Rulesets
                             {
                                 var tex = Texture2D.FromStream(AcrylGame.Game.GraphicsDevice,
                                     fs);
-                                Background = new Sprite(tex);
-                                Background.PositionOrigin = Origin.Center;
-                                Background.Origin = Origin.Center;
+                                Background = new Sprite(tex) {PositionOrigin = Origin.Center, Origin = Origin.Center};
                                 Background.Scale = AcrylGame.Field.ApplyScale(Background);
                             }
                             break;

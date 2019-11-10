@@ -65,7 +65,7 @@ namespace Acryl.Graphics.Scenes
         }
         
         private RenderTarget2D _sliderTarget;
-        
+
         protected override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             if (_sliderTarget == null)
@@ -73,12 +73,16 @@ namespace Acryl.Graphics.Scenes
                     AcrylGame.Game.GraphicsDevice,
                     AcrylGame.Game.GraphicsDevice.PresentationParameters.BackBufferWidth,
                     AcrylGame.Game.GraphicsDevice.PresentationParameters.BackBufferHeight,
-                    false,
+                    true,
                     AcrylGame.Game.GraphicsDevice.PresentationParameters.BackBufferFormat,
-                    DepthFormat.Depth24);
+                    DepthFormat.Depth24Stencil8, 8, RenderTargetUsage.DiscardContents);
+            
             var sliders = Beatmap.HitObjects.Where(obj => obj.Kind == HitObjectKind.Slider).ToList();
             var other = Beatmap.HitObjects.Where(obj => obj.Kind != HitObjectKind.Slider).ToList();
             
+            //////////////////
+            // Draw our Slider into _sliderTarget
+            //////////////////
             AcrylGame.Game.GraphicsDevice.SetRenderTarget(_sliderTarget);
             AcrylGame.Game.GraphicsDevice.Clear(Color.Transparent);
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
@@ -86,15 +90,17 @@ namespace Acryl.Graphics.Scenes
                 sliders[i].DrawFrame(spriteBatch, gameTime);
             }
             spriteBatch.End();
-            
             AcrylGame.Game.GraphicsDevice.SetRenderTarget(null);
             
+            //////////////////
+            // Draw our Background Image
+            //////////////////
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
             Beatmap.Background?.DrawFrame(spriteBatch, gameTime);
             if (Beatmap.Background != null)
                 Beatmap.Background.Alpha = .4f;
             spriteBatch.End();
-            
+   
             HitSlider.BorderShader.Parameters["BorderColor"].SetValue(Color.White.ToVector4());
             HitSlider.BorderShader.Parameters["BorderWidth"].SetValue(.005f);
             
@@ -104,6 +110,7 @@ namespace Acryl.Graphics.Scenes
                 samplerState: SamplerState.AnisotropicWrap);
             spriteBatch.Draw(_sliderTarget, new Rectangle(0, 0, 1280, 720), Color.White);
             spriteBatch.End();
+
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
             // We render them backward to fix some Z Axis issues.

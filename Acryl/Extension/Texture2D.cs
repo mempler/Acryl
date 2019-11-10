@@ -1,7 +1,10 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Color = Microsoft.Xna.Framework.Color;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace Acryl.Extension
 {
@@ -28,6 +31,35 @@ namespace Acryl.Extension
             bitmap.UnlockBits(data);
 
             return tex;
+        }
+        
+        public static Texture2D CreateCircle(this GraphicsDevice graphicsDevice, int radius, Color color)
+        {
+            var texture = new Texture2D(graphicsDevice, radius, radius, false, SurfaceFormat.Color);
+            var colorData = new Color[radius*radius];
+
+            var diam = radius / 2f;
+            var diamsq = diam * diam;
+
+            for (var x = 0; x < radius; x++)
+            {
+                for (var y = 0; y < radius; y++)
+                {
+                    var index = x * radius + y;
+                    var pos = new Vector2(x - diam, y - diam);
+                    if (pos.LengthSquared() <= diamsq)
+                    {
+                        colorData[index] = color;
+                    }
+                    else
+                    {
+                        colorData[index] = Color.Transparent;
+                    }
+                }
+            }
+
+            texture.SetData(colorData);
+            return texture;
         }
     }
 }

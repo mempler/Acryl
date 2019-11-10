@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Acryl.Extension;
 using Acryl.Graphics;
 using Acryl.Graphics.Elements;
 using Acryl.Graphics.Skin;
@@ -31,16 +32,16 @@ namespace Acryl.Rulesets.osu.HitObjects
         
         public double EndTime => Timing + ((_repeats * Path.Distance) / TimingPoint.Velocity);
         public double Duration => (EndTime - Timing);
-        
-        public static Texture2D PathTexture =>
-            SkinManager.GetSkinElement("Rulesets/osu/HitObject/slider_inner");
+
+        private static Texture2D pathTex = AcrylGame.Game.GraphicsDevice.CreateCircle(512, Color.Black);
+        public static Texture2D PathTexture => pathTex;
 
         public static Texture2D FollowerTexture =>
             SkinManager.GetSkinElement("Rulesets/osu/HitObject/approachcircle");
 
         public static Effect BorderShader
             => SkinManager.GetEffect("Effects/Slider");
-        
+
         public HitSlider(
             HitSliderType type, List<Vector2> sliderCurvePoints,
             Color col, float scale, double pixelLength, int repeats)
@@ -83,7 +84,7 @@ namespace Acryl.Rulesets.osu.HitObjects
                     var aspectRatio = PathTexture.Width / PathTexture.Height;
                     var aspectHcRatio = HitCircle.HitCircleTexture.Width / HitCircle.HitCircleTexture.Height;
                     
-                    sprite.Scale *= new Vector2(_scale * aspectHcRatio / aspectRatio) * .25f;
+                    sprite.Scale *= new Vector2(_scale * aspectHcRatio / aspectRatio) * .20f;
                     sprite.Origin = Origin.Center;
                     
                     PathSprites.Add(sprite);

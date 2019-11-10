@@ -29,6 +29,9 @@ namespace Acryl
             );
         
         public static SpriteFont DefaultFont { get; set; }
+        
+                
+        public static BloomFilter BloomFilter = new BloomFilter();
 
         protected override void Dispose(bool disposing)
         {
@@ -86,6 +89,8 @@ namespace Acryl
             //ActiveScene = new GamePlayScene();
             ActiveScene = new GamePlayScene();
             ActiveScene.SwitchTo(ActiveScene);
+            
+            BloomFilter.Load(GraphicsDevice, Content, 1280, 720);
         }
 
         protected override async void Update(GameTime gameTime)

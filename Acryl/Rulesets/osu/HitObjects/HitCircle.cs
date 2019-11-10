@@ -1,3 +1,4 @@
+using System;
 using Acryl.Graphics;
 using Acryl.Graphics.Elements;
 using Acryl.Graphics.Skin;
@@ -20,15 +21,13 @@ namespace Acryl.Rulesets.osu.Beatmap.HitObjects
         public static Texture2D ApproachCircleTexture =>
             SkinManager.GetSkinElement("Rulesets/osu/HitObject/approachcircle");
 
-        private float _circleScale;
-        public HitCircle(Vector2 pos, Color col, float scale)
+        private double _circleScale;
+        public HitCircle(Vector2 pos, Color col, double scale)
         {
             Alpha = 0f;
-            Scale *= scale;
+            Scale *= (float) Math.Round(scale, 4);
             _circleScale = scale;
             Position = BeatmapManager.MapPosition(pos);
-
-            
             
             _hitCircleSprite = new Sprite(HitCircleTexture);
             _hitCircleSprite.Color = col;
@@ -42,7 +41,7 @@ namespace Acryl.Rulesets.osu.Beatmap.HitObjects
 
             
             _approachCircleSprite = new Sprite(ApproachCircleTexture);
-            _approachCircleSprite.Scale *= scale * 1.3f;
+            _approachCircleSprite.Scale *= (float) Math.Round(scale, 4) * 1.3f;
             _approachCircleSprite.Origin = Origin.Center;
             Add(_approachCircleSprite);
         }
@@ -58,9 +57,12 @@ namespace Acryl.Rulesets.osu.Beatmap.HitObjects
 
         protected override void Update(GameTime gameTime)
         {
+            var elapsed = Math.Max(BeatmapManager.ActiveBeatmap.CurrentElapsed,
+                BeatmapManager.ActiveBeatmap.Song.Position);
+            
             Freeze = BeatmapManager.ActiveBeatmap.FreezeBeatmap;
-            if (BeatmapManager.ActiveBeatmap.CurrentElapsed > (Timing - 250) &&
-                BeatmapManager.ActiveBeatmap.CurrentElapsed < (Timing) &&
+            if (elapsed > (Timing - 250) &&
+                elapsed < (Timing) &&
                 !isFading)
             {
                 isFading = true;
@@ -77,7 +79,7 @@ namespace Acryl.Rulesets.osu.Beatmap.HitObjects
             if (!Visible)
                 return;
             
-            if (BeatmapManager.ActiveBeatmap.CurrentElapsed >= HideTime + Timing)
+            if (elapsed >= HideTime + Timing)
             {
                 isFading = true;
                 Alpha = 1f;
