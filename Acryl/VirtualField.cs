@@ -1,5 +1,4 @@
 using System;
-using Acryl.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -26,12 +25,17 @@ namespace Acryl
         
         public Vector2 ApplyScale(Vector2 original) // Converts scale to Virtual Scale && applies to Screen Scale
         {
+            var fieldAspect = Width / Height;
             var (width, height) = original;
+            var originalAspect = width / height;
             
-            var scaleX = Width / width;
-            var scaleY = Height / height;
-           
-            return new Vector2(scaleX, scaleY);
+            float scaleFactor;
+            if (fieldAspect > originalAspect)
+                scaleFactor = Height / height;
+            else
+                scaleFactor = Width / width;
+
+            return new Vector2(scaleFactor);
         }
     }
 }
