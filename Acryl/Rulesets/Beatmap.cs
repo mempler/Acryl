@@ -7,6 +7,7 @@ using Acryl.Graphics.Elements;
 using Acryl.Graphics.Skin;
 using Acryl.Helpers;
 using Acryl.Rulesets.osu.Beatmap.HitObjects;
+using Acryl.Rulesets.osu.HitObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -197,8 +198,7 @@ namespace Acryl.Rulesets
                     };
                     timingPoint.BPM = timingPoint.MsPerBeat / 60000d;
 
-                    timingPoint.SpeedMultiplier =  timingPoint.MsPerBeat < 0 ? 100.0 / - timingPoint.MsPerBeat : 1;;
-                    
+                    timingPoint.SpeedMultiplier = timingPoint.MsPerBeat < 0 ? 100.0 / -timingPoint.MsPerBeat : 1;
                     var scoringDistance = 100 * Difficulty.SliderMultiplier * timingPoint.SpeedMultiplier;
                     
                     timingPoint.Velocity = scoringDistance / timingPoint.MsPerBeat;
@@ -313,6 +313,7 @@ namespace Acryl.Rulesets
                         slider.Timing = timing;
                         slider.TimingPoint = TimingPoints.FirstOrDefault(s => s.Offset >= timing);
                         slider.Visible = false;
+                        slider.Index = HitObjects.Count;
                         
                         HitObjects.Add(slider);
                     }

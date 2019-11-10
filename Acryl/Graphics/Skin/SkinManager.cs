@@ -15,6 +15,10 @@ namespace Acryl.Graphics.Skin
         private static Dictionary<string, Texture2D> SkinnableTextures
             = new Dictionary<string, Texture2D>();
         
+        private static Dictionary<string, Effect> SkinnableEffects
+            = new Dictionary<string, Effect>();
+
+        
         public static Color[] SkinColors =
         {
             Color.Red,
@@ -50,6 +54,17 @@ namespace Acryl.Graphics.Skin
 
             SkinnableTextures[element] = tex;
             return tex;
+        }
+
+        public static Effect GetEffect(string element)
+        {
+            if (SkinnableEffects.TryGetValue(element, out var effect))
+                return effect;
+            
+            effect = AcrylGame.Game.Content.Load<Effect>(element);
+            SkinnableEffects[element] = effect;
+
+            return effect;
         }
     }
 }

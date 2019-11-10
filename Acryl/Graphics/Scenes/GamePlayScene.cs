@@ -5,6 +5,7 @@ using Acryl.Extension.Discord;
 using Acryl.Graphics.Elements;
 using Acryl.Graphics.Elements.Gameplay;
 using Acryl.Rulesets;
+using Acryl.Rulesets.osu.HitObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -63,24 +64,48 @@ namespace Acryl.Graphics.Scenes
                    });
         }
         
+        private RenderTarget2D _sliderTarget;
+        
         protected override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
+            if (_sliderTarget == null)
+                _sliderTarget = new RenderTarget2D(
+                    AcrylGame.Game.GraphicsDevice,
+                    AcrylGame.Game.GraphicsDevice.PresentationParameters.BackBufferWidth,
+                    AcrylGame.Game.GraphicsDevice.PresentationParameters.BackBufferHeight,
+                    false,
+                    AcrylGame.Game.GraphicsDevice.PresentationParameters.BackBufferFormat,
+                    DepthFormat.Depth24);
             var sliders = Beatmap.HitObjects.Where(obj => obj.Kind == HitObjectKind.Slider).ToList();
             var other = Beatmap.HitObjects.Where(obj => obj.Kind != HitObjectKind.Slider).ToList();
             
-            // Sliders are special, they need to be drawn differently.
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
-            // We render them backward to fix some Z Axis issues.
+            AcrylGame.Game.GraphicsDevice.SetRenderTarget(_sliderTarget);
+            AcrylGame.Game.GraphicsDevice.Clear(Color.Transparent);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
             for (var i = sliders.Count - 1; i > 0; i--) {
                 sliders[i].DrawFrame(spriteBatch, gameTime);
             }
             spriteBatch.End();
             
+            AcrylGame.Game.GraphicsDevice.SetRenderTarget(null);
+            
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
             Beatmap.Background?.DrawFrame(spriteBatch, gameTime);
             if (Beatmap.Background != null)
                 Beatmap.Background.Alpha = .4f;
+            spriteBatch.End();
+            
+            HitSlider.BorderShader.Parameters["BorderColor"].SetValue(Color.White.ToVector4());
+            HitSlider.BorderShader.Parameters["BorderWidth"].SetValue(.005f);
+            
+            spriteBatch.Begin(SpriteSortMode.Deferred,
+                BlendState.NonPremultiplied,
+                effect: HitSlider.BorderShader,
+                samplerState: SamplerState.AnisotropicWrap);
+            spriteBatch.Draw(_sliderTarget, new Rectangle(0, 0, 1280, 720), Color.White);
+            spriteBatch.End();
 
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
             // We render them backward to fix some Z Axis issues.
             for (var i = other.Count - 1; i > 0; i--) {
                 other[i].DrawFrame(spriteBatch, gameTime);
@@ -89,6 +114,7 @@ namespace Acryl.Graphics.Scenes
             SkipButton.DrawFrame(spriteBatch, gameTime);
             fpsCounter.DrawFrame(spriteBatch, gameTime);
             spriteBatch.End();
+            
         }
         
         protected override void Update(GameTime gameTime)

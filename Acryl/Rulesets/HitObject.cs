@@ -14,5 +14,6 @@ namespace Acryl.Rulesets
         public HitObjectKind Kind;
         public TimingPoint TimingPoint;
         public int Timing;
+        public int Index = 0;
     }
 }

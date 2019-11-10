@@ -44,14 +44,7 @@ namespace Acryl
             IsMouseVisible = true;
 
             IsFixedTimeStep = false;
-            
-            GraphicsDeviceManager.PreferredBackBufferWidth = 1280;
-            GraphicsDeviceManager.PreferredBackBufferHeight = 720;
-            GraphicsDeviceManager.PreferMultiSampling = true;
-            GraphicsDeviceManager.SynchronizeWithVerticalRetrace = false;
 
-            GraphicsDeviceManager.ApplyChanges();
-            
             Field = new VirtualField(1280, 720);
             
             Game = this;
@@ -67,6 +60,19 @@ namespace Acryl
             AudioEngine = new AudioEngine();
             
             Discord = new Discord(641308731367489536, (ulong) CreateFlags.NoRequireDiscord);
+
+            GraphicsDeviceManager.PreferredBackBufferWidth = 1280;
+            GraphicsDeviceManager.PreferredBackBufferHeight = 720;
+            GraphicsDeviceManager.PreferMultiSampling = true;
+            GraphicsDeviceManager.SynchronizeWithVerticalRetrace = false;
+            GraphicsDeviceManager.GraphicsProfile = GraphicsProfile.HiDef;
+            
+            GraphicsDeviceManager.PreparingDeviceSettings += (sender, args) =>
+            {
+                args.GraphicsDeviceInformation.PresentationParameters.MultiSampleCount = 8;
+            };
+            
+            GraphicsDeviceManager.ApplyChanges();
 
             Window.Title = "Acryl";
             base.Initialize();

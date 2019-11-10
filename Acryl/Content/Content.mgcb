@@ -1,7 +1,7 @@
 
 #----------------------------- Global Properties ----------------------------#
 
-/outputDir:..\bin\Debug\netcoreapp2.0\Content\$(Platform)
+/outputDir:..\bin\Debug\netcoreapp3.0\Content\$(Platform)
 /intermediateDir:obj/$(Platform)
 /platform:DesktopGL
 /config:
@@ -36,6 +36,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:AcrylSmall.png
+
+#begin Effects/Slider.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/Slider.fx
 
 #begin Fonts/Exo-Regular.spritefont
 /importer:FontDescriptionImporter
@@ -92,7 +98,7 @@
 /processorParam:TextureFormat=Color
 /build:SkinnableTextures/Rulesets/osu/HitObject/hitcircleselect.png
 
-#begin SkinnableTextures/Rulesets/osu/HitObject/slider_outer.png
+#begin SkinnableTextures/Rulesets/osu/HitObject/slider_inner.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -102,7 +108,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:SkinnableTextures/Rulesets/osu/HitObject/slider_outer.png
+/build:SkinnableTextures/Rulesets/osu/HitObject/slider_inner.png
 
 #begin SkinnableTextures/Skip.png
 /importer:TextureImporter
