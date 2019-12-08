@@ -39,4 +39,4 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: Release
-        path: Acryl/bin/Release/netcoreapp3.0/win-x64/publish
+        path: Acryl/bin/Release/netcoreapp3.1/win-x64/publish
