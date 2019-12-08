@@ -74,18 +74,16 @@ namespace Acryl.Graphics
         /// <param name="position">Position which should we move to</param>
         /// <param name="duration">Duration between tweening, in MS</param>
         /// <param name="easingType"></param>
-        public void MoveTo(Vector2 position, float duration, EasingType easingType = EasingType.None)
-        {
-            Easing.ApplyEasing(eas =>
+        public EasingRequest<Vector2> MoveTo(Vector2 position, float duration, EasingType easingType = EasingType.None)
+            => Easing.ApplyEasing(eas =>
                 {
                     eas.Freeze = Freeze;
                     Position = eas.Current;
                 },
                 Position, position,
                 duration, easingType);
-        }
 
-        public void ScaleTo(float scale, float duration, EasingType easingType = EasingType.None)
+        public EasingRequest<Vector2> ScaleTo(float scale, float duration, EasingType easingType = EasingType.None)
             => ScaleTo(new Vector2(scale), duration, easingType);
         
         /// <summary>
@@ -94,33 +92,30 @@ namespace Acryl.Graphics
         /// <param name="scale">Scale which we should scale to.</param>
         /// <param name="duration">Duration between tweening, in MS</param>
         /// <param name="easingType"></param>
-        public void ScaleTo(Vector2 scale, float duration, EasingType easingType = EasingType.None)
-        {
-            var easing = 
-            Easing.ApplyEasing(eas =>
+        public EasingRequest<Vector2> ScaleTo(Vector2 scale, float duration, EasingType easingType = EasingType.None)
+            => Easing.ApplyEasing(eas =>
                 {
                     eas.Freeze = Freeze;
                     Scale = eas.Current;
                 },
                 Scale, scale,
                 duration, easingType);
-        }
-        
+
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="alpha">Alpha we should fade to..</param>
         /// <param name="duration">Duration between tweening, in MS</param>
         /// <param name="easingType"></param>
-        public void FadeTo(float alpha, float duration, EasingType easingType = EasingType.None)
-        {
-            Easing.ApplyEasing(eas =>
+        public EasingRequest<double> FadeTo(float alpha, float duration, EasingType easingType = EasingType.None)
+            => Easing.ApplyEasing(eas =>
                 {
                     eas.Freeze = Freeze;
                     Alpha = (float) eas.Current;
                 },
                 Alpha, alpha,
                 duration, easingType);
-        }
+
     }
 }

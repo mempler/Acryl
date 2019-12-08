@@ -31,7 +31,8 @@ namespace Acryl.Helpers
         public double EndTime;
         public EasingType Type;
         
-        public UpdateCallback<EasingRequest<T>> Callback;
+        public UpdateCallback<EasingRequest<T>> OnUpdate;
+        public UpdateCallback<EasingRequest<T>> OnFinish;
 
         public bool Freeze = false;
     }
@@ -65,7 +66,7 @@ namespace Acryl.Helpers
                         if (easing.Current == easing.To)
                             toRemove.Add(easing);
                     
-                        easing.Callback(easing);
+                        easing.OnUpdate(easing);
                     
                         if (easing.Current == easing.To)
                             toRemove.Add(easing);
@@ -73,7 +74,10 @@ namespace Acryl.Helpers
 
                 foreach(var easing in toRemove)
                     lock (EasingPipelineVector)
+                    {
+                        easing.OnFinish?.Invoke(easing);
                         EasingPipelineVector.Remove(easing);
+                    }
             }
 
             // Double Pipeline
@@ -100,12 +104,15 @@ namespace Acryl.Helpers
                         if (easing.Current == easing.To)
                             toRemove.Add(easing);
 
-                        easing.Callback(easing);
+                        easing.OnUpdate(easing);
                     }
 
                 foreach(var easing in toRemove)
                     lock (EasingPipelineDouble)
+                    {
+                        easing.OnFinish?.Invoke(easing);
                         EasingPipelineDouble.Remove(easing);
+                    }
             }
         }
 
@@ -123,7 +130,7 @@ namespace Acryl.Helpers
                 Type = type,
                 EndTime = endTime,
                 StartTime = startTime,
-                Callback = callback
+                OnUpdate = callback
             };
 
             lock (EasingPipelineVector)
@@ -146,7 +153,7 @@ namespace Acryl.Helpers
                 Type = type,
                 StartTime = startTime,
                 EndTime = endTime,
-                Callback = callback
+                OnUpdate = callback
             };
 
             lock (EasingPipelineDouble)

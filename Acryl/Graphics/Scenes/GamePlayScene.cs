@@ -56,6 +56,9 @@ namespace Acryl.Graphics.Scenes
 
         protected override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
+            fpsCounter.Alpha = Alpha;
+            Rulesets[Beatmap.RulesetId].Alpha = Alpha;
+            
             Rulesets[Beatmap.RulesetId].DrawFrame(spriteBatch, gameTime);
 
             // Draw everything else ontop of the Ruleset Layer.

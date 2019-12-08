@@ -98,10 +98,14 @@ namespace Acryl
         {
             DefaultFont = Content.Load<SpriteFont>("Fonts/Exo-Regular");
             SpriteBatch = new SpriteBatch(GraphicsDevice);
-            
-            //ActiveScene = new GamePlayScene();
-            ActiveScene = new GamePlayScene();
-            ActiveScene.SwitchTo(ActiveScene);
+
+            ActiveScene = new StartupScene();
+        }
+
+        public void SwitchScene(Scene scene)
+        {
+            ActiveScene.SwitchTo(scene);
+            ActiveScene = scene;
         }
 
         protected override async void Update(GameTime gameTime)
