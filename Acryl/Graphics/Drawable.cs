@@ -74,7 +74,7 @@ namespace Acryl.Graphics
         /// <param name="position">Position which should we move to</param>
         /// <param name="duration">Duration between tweening, in MS</param>
         /// <param name="easingType"></param>
-        public void MoveTo(Vector2 position, float duration, EasingType easingType)
+        public void MoveTo(Vector2 position, float duration, EasingType easingType = EasingType.None)
         {
             Easing.ApplyEasing(eas =>
                 {

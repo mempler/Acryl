@@ -7,6 +7,8 @@ namespace Acryl.Graphics.Elements
 {
     public class Sprite : Drawable, IDisposable
     {
+        public Vector2 Size => new Vector2(Texture.Width, Texture.Height);
+        
         public Sprite(Texture2D tex)
         {
             Texture = tex;
