@@ -6,7 +6,7 @@ using Acryl.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Acryl.Rulesets.osu.Beatmap.HitObjects
+namespace Acryl.Rulesets.osu.HitObjects
 {
     public sealed class HitCircle : HitObject
     {
@@ -35,8 +35,7 @@ namespace Acryl.Rulesets.osu.Beatmap.HitObjects
             Add(_hitCircleSprite);
 
 
-            _hitCircleOverlaySprite = new Sprite(HitCircleOverlayTexture);
-            _hitCircleOverlaySprite.Origin = Origin.Center;
+            _hitCircleOverlaySprite = new Sprite(HitCircleOverlayTexture) {Origin = Origin.Center};
             Add(_hitCircleOverlaySprite);
 
             
@@ -51,7 +50,7 @@ namespace Acryl.Rulesets.osu.Beatmap.HitObjects
         }
         
         private bool HasBeginScaling;
-        private bool isFading;
+        private bool _isFading;
 
         private const int HideTime = 250; // TODO: This should be based on AR OD
 
@@ -62,17 +61,17 @@ namespace Acryl.Rulesets.osu.Beatmap.HitObjects
             Freeze = BeatmapManager.ActiveBeatmap.FreezeBeatmap;
             if (elapsed > (Timing - 250) &&
                 elapsed < (Timing) &&
-                !isFading)
+                !_isFading)
             {
-                isFading = true;
+                _isFading = true;
                 FadeTo(1f, 250);
                 Visible = true;
             }
 
             if (Alpha >= 1f)
-                isFading = false;
+                _isFading = false;
             
-            if (isFading)
+            if (_isFading)
                 return;
             
             if (!Visible)
@@ -80,7 +79,7 @@ namespace Acryl.Rulesets.osu.Beatmap.HitObjects
             
             if (elapsed >= HideTime + Timing)
             {
-                isFading = true;
+                _isFading = true;
                 Alpha = 1f;
                 FadeTo(0, 100);
                 ScaleTo(Vector2.One, 200);

@@ -4,7 +4,6 @@ using Acryl.Graphics;
 using Acryl.Graphics.Elements;
 using Acryl.Graphics.Skin;
 using Acryl.osu;
-using Acryl.Rulesets.osu.Beatmap.HitObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Color = Microsoft.Xna.Framework.Color;
@@ -59,7 +58,7 @@ namespace Acryl.Rulesets.osu.HitObjects
             _sliderFollower = new Sprite(FollowerTexture) {Visible = true};
         }
 
-        private bool _forceHide;
+        private bool _forceHide = false;
         protected override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             if (_sliderBegHc.Timing == 0)
