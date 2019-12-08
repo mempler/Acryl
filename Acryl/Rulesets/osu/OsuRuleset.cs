@@ -13,8 +13,8 @@ namespace Acryl.Rulesets.osu
 
         public OsuRuleset()
         {
-            Stack.Push(new CircleLayer());
             Stack.Push(new SliderLayer());
+            Stack.Push(new CircleLayer());
             Stack.Push(new UiLayer());
         }
     }
