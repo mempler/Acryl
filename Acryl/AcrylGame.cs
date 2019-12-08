@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
 using Acryl.Audio;
 using Acryl.Extension.Discord;
 using Acryl.Graphics;
@@ -47,8 +49,12 @@ namespace Acryl
             };
 
             GraphicsDeviceManager.PreparingDeviceSettings += (sender, args) =>
+            {
+                args.GraphicsDeviceInformation.PresentationParameters.PresentationInterval = PresentInterval.Immediate;
                 args.GraphicsDeviceInformation.PresentationParameters.RenderTargetUsage =
                     RenderTargetUsage.PlatformContents;
+            };
+                
 
             GraphicsDeviceManager.ApplyChanges();
 
@@ -72,11 +78,16 @@ namespace Acryl
             GraphicsDevice.RasterizerState = new RasterizerState { CullMode = CullMode.None, MultiSampleAntiAlias = true };
             GraphicsDevice.BlendState = new BlendState() { AlphaSourceBlend = Blend.SourceAlpha, AlphaDestinationBlend = Blend.InverseSourceColor, ColorSourceBlend = Blend.SourceAlpha, ColorDestinationBlend = Blend.InverseSourceAlpha };
             
-            
             AudioEngine = new AudioEngine();
-            
-            Discord = new Discord(641308731367489536, (ulong) CreateFlags.NoRequireDiscord);
-            
+
+            try
+            {
+                Discord = new Discord(641308731367489536, (ulong) CreateFlags.NoRequireDiscord);
+            } catch (Exception ex)
+            {
+                Console.WriteLine("Failed to create \"Discord\" {0}", ex);
+            }
+
             //GraphicsDeviceManager.ApplyChanges();
 
             Window.Title = "Acryl";
@@ -93,7 +104,7 @@ namespace Acryl
             ActiveScene.SwitchTo(ActiveScene);
         }
 
-        protected override void Update(GameTime gameTime)
+        protected override async void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -107,12 +118,10 @@ namespace Acryl
 
             UpdateGameTime = gameTime;
 
-            // TODO: Add your update logic here
             Easing.Update(gameTime);
-
             ActiveScene.UpdateFrame(gameTime);
-
-            base.Update(gameTime);
+            
+            await Task.Run(() => base.Update(gameTime) );
         }
         
         protected override void Draw(GameTime gameTime)

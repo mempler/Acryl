@@ -6,7 +6,6 @@ using Acryl.Audio;
 using Acryl.Graphics;
 using Acryl.Graphics.Elements;
 using Acryl.Graphics.Skin;
-using Acryl.Rulesets.osu.Beatmap.HitObjects;
 using Acryl.Rulesets.osu.HitObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
