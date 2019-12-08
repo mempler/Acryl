@@ -72,7 +72,7 @@ namespace Acryl.Graphics.Elements
             }
 
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
-            spriteBatch.Draw(_cachedTexture, new Rectangle(-72, -72, 1408, 792),
+            spriteBatch.Draw(_cachedTexture, new Rectangle(0,0, 1280, 720),
                 Color.White);
             spriteBatch.End();
         }
