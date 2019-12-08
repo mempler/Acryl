@@ -23,6 +23,24 @@ namespace Acryl.Audio
             set => Bass.ChannelSetPosition(stream, Bass.ChannelSeconds2Bytes(stream, value / 1000f));
         }
         
+        public float LeftChannel => Bass.ChannelGetLevelLeft(stream) / 32768f;
+        public float RightChannel => Bass.ChannelGetLevelRight(stream) / 32768f;
+
+        public float Maximum => Math.Max(LeftChannel, RightChannel);
+
+        public float[] LowFreqSampleRate
+        {
+            get
+            {
+                var data = new float[256/4];
+                Bass.ChannelGetData(stream, data, 256);
+                
+                return data;
+            }
+        }
+
+        public float Average => (LeftChannel + RightChannel) / 2;
+
         internal AudioStream(string path)
         {
             if (!File.Exists(path))
