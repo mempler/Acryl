@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Acryl.Graphics;
 using Microsoft.Xna.Framework;
@@ -32,11 +33,18 @@ namespace Acryl.Rulesets.osu.Layers
             var objects = Beatmap.HitObjects
                                  .Where(obj => Beatmap.CurrentElapsed - 5000f < obj.Timing &&
                                                obj.Kind == HitObjectKind.Circle)
-                                 .ToList();
-  
-            for (var i = objects.Count - 1; i > 0; i--) {
-                objects[i].UpdateFrame(gameTime);
+                                 .Where(obj => Beatmap.CurrentElapsed + 1000f > obj.Timing)
+                                 .GetEnumerator();
+
+            while (true)
+            {
+                objects.Current?.UpdateFrame(gameTime);
+                
+                if (!objects.MoveNext())
+                    break;
             }
+            
+            objects.Dispose();
         }
     }
 }
