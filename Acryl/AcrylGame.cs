@@ -1,143 +1,30 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using Acryl.Audio;
-using Acryl.Extension.Discord;
-using Acryl.Graphics;
-using Acryl.Graphics.Scenes;
-using Acryl.Helpers;
-using Microsoft.Xna.Framework;
+using System;
+using Acryl.Engine;
+using Acryl.Engine.Graphics.Core;
+using Acryl.Engine.Graphics.MonoGame.ImGui;
+using Acryl.Engine.Graphics.MonoGame.ImGui.Layouts;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace Acryl
 {
-    public class AcrylGame : Game
+    public class AcrylGame : GameBase
     {
-        public GraphicsDeviceManager GraphicsDeviceManager { get; }
-        public SpriteBatch SpriteBatch { get; private set; }
+        [DependencyResolved]
+        private GraphicsDevice Device { get; set; }
 
-        public static GameTime UpdateGameTime { get; private set; }
-        public static AcrylGame Game { get; private set; }
-        public static Scene ActiveScene { get; private set; }
-        public static AudioEngine AudioEngine { get; private set; }
-        public static Discord Discord { get; private set; }
-        public static VirtualField Field { get; private set; }
-
-        public static string AcrylDirectory = Path.Combine(
-            //Directory.GetParent(Environment.GetFolderPath(Environment.SpecialFolder.Personal)).FullName,
-            ".acryl"
-            );
+        private MonoImGui ImGui;
+        private Text2D Text;
         
-        public static SpriteFont DefaultFont { get; set; }
-        
-        protected override void Dispose(bool disposing)
+        [LoadAsync]
+        private async void Load(GraphicsDevice device)
         {
-            AudioEngine?.Dispose();
-            Discord?.Dispose();
-            base.Dispose(disposing);
-        }
-
-        public AcrylGame()
-        {
-            GraphicsDeviceManager = new GraphicsDeviceManager(this)
-            {
-                PreferredBackBufferWidth = 1280,
-                PreferredBackBufferHeight = 720,
-                SynchronizeWithVerticalRetrace = false,
-                PreferMultiSampling = true,
-            };
-
-            GraphicsDeviceManager.PreparingDeviceSettings += (sender, args) =>
-            {
-                args.GraphicsDeviceInformation.PresentationParameters.PresentationInterval = PresentInterval.Immediate;
-                args.GraphicsDeviceInformation.PresentationParameters.RenderTargetUsage =
-                    RenderTargetUsage.PlatformContents;
-            };
-                
-
-            GraphicsDeviceManager.ApplyChanges();
-
-            Content.RootDirectory = "Content";
-            IsMouseVisible = true;
-
-            IsFixedTimeStep = false;
-
-            Field = new VirtualField(1280, 720);
+            Text = new Text2D("Hello World!") {Size = 16};
+            Add(Text);
             
-            Game = this;
-        }
-        
-        protected override void Initialize()
-        {
-            if (!Directory.Exists(Path.Combine(AcrylDirectory, "Skins")))
-                Directory.CreateDirectory(Path.Combine(AcrylDirectory, "Skins"));
-            if (!Directory.Exists(Path.Combine(AcrylDirectory, "BeatMaps")))
-                Directory.CreateDirectory(Path.Combine(AcrylDirectory, "BeatMaps"));
+            ImGui = new MonoImGui();
+            Add(ImGui);
             
-            GraphicsDevice.RasterizerState = new RasterizerState { CullMode = CullMode.None, MultiSampleAntiAlias = true };
-            GraphicsDevice.BlendState = new BlendState() { AlphaSourceBlend = Blend.SourceAlpha, AlphaDestinationBlend = Blend.InverseSourceColor, ColorSourceBlend = Blend.SourceAlpha, ColorDestinationBlend = Blend.InverseSourceAlpha };
-            
-            AudioEngine = new AudioEngine();
-
-            try
-            {
-                Discord = new Discord(641308731367489536, (ulong) CreateFlags.NoRequireDiscord);
-            } catch (Exception ex)
-            {
-                Console.WriteLine("Failed to create \"Discord\" {0}", ex);
-            }
-
-            //GraphicsDeviceManager.ApplyChanges();
-
-            Window.Title = "Acryl";
-            base.Initialize();
-        }
-
-        protected override void LoadContent()
-        {
-            DefaultFont = Content.Load<SpriteFont>("Fonts/Exo-Regular");
-            SpriteBatch = new SpriteBatch(GraphicsDevice);
-
-            ActiveScene = new StartupScene();
-        }
-
-        public void SwitchScene(Scene scene)
-        {
-            ActiveScene.SwitchTo(scene);
-            ActiveScene = scene;
-        }
-
-        protected override async void Update(GameTime gameTime)
-        {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-                Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-                
-            /* TODO: Swap to Fullscreen
-            if (Keyboard.GetState().IsKeyDown(Keys.RightAlt) &&
-                Keyboard.GetState().IsKeyDown(Keys.Enter))
-                Exit();
-            */
-
-            UpdateGameTime = gameTime;
-
-            Easing.Update(gameTime);
-            ActiveScene.UpdateFrame(gameTime);
-            
-            await Task.Run(() => base.Update(gameTime) );
-        }
-        
-        protected override void Draw(GameTime gameTime)
-        {
-            //GraphicsDevice.Clear(Color.DarkSlateGray);
-            GraphicsDevice.Clear(Color.Transparent);
-            
-            ActiveScene.DrawFrame(SpriteBatch, gameTime);
-
-            base.Draw(gameTime);
-                        
-            Discord.RunCallbacks();
+            ImGui.Add(new ImGuiDebugger());
         }
     }
 }

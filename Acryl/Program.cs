@@ -1,14 +1,14 @@
-﻿using System;
+using Microsoft.Xna.Framework;
 
 namespace Acryl
 {
     public static class Program
     {
-        [STAThread]
-        private static void Main()
+        public static void Main()
         {
-            using (var game = new AcrylGame())
-                game.Run();
+            using var game = new AcrylGame();
+            
+            game.Run();
         }
     }
 }
