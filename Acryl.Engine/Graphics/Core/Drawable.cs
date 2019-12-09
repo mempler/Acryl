@@ -2,6 +2,7 @@ using System;
 using Acryl.Engine.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.Tweening;
 
 namespace Acryl.Engine.Graphics.Core
 {
@@ -36,6 +37,8 @@ namespace Acryl.Engine.Graphics.Core
         
         [DependencyResolved]
         private VirtualField Field { get; set; }
+
+        private Tweener _tweener = new Tweener();
 
         public (Color color, Vector2 pos, float rotation, Vector2 scale, Vector2 origin) CalculateFrame(float width, float height)
         {
@@ -113,6 +116,7 @@ namespace Acryl.Engine.Graphics.Core
             if (!Visible) // Don't draw anything that isn't even visible
                 return;
 
+            _tweener.Update((float) gameTime.ElapsedGameTime.TotalSeconds);
             Draw(spriteBatch, gameTime);
             if (!DrawChildren)
                 return;
@@ -134,6 +138,20 @@ namespace Acryl.Engine.Graphics.Core
 
         protected virtual void Update(GameTime gameTime)
         {
+        }
+
+        public Tween<Vector2> MoveTo(Vector2 to, float duration, float delay)
+        {
+            return _tweener.TweenTo(this,
+                e => e.Position, to,
+                duration, delay);
+        }
+        
+        public Tween<Vector2> ScaleTo(Vector2 to, float duration, float delay)
+        {
+            return _tweener.TweenTo(this,
+                e => e.Scale, to,
+                duration, delay);
         }
     }
 }

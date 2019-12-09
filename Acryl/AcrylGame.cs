@@ -6,6 +6,7 @@ using Acryl.Engine.Graphics.MonoGame.ImGui.Layouts;
 using Acryl.Engine.Stores;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.Tweening;
 
 namespace Acryl
 {
@@ -35,6 +36,14 @@ namespace Acryl
                 Origin = Origin.Center,
                 PositionOrigin = Origin.Center,
             };
+
+            _sprite
+                .MoveTo(new Vector2(-100, 0), 5, 0)
+                .Easing(EasingFunctions.ExponentialInOut);
+            
+            _sprite.ScaleTo(new Vector2(.1f, .1f), 2, 0)
+                .Easing(EasingFunctions.BounceOut);
+            
             Add(_sprite);
         }
     }
