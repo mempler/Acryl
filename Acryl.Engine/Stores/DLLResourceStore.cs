@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -6,18 +7,14 @@ namespace Acryl.Engine.Stores
 {
     public class DllResourceStore : ResourceStore<byte[]>
     {
-        private readonly Assembly _assembly;
+        private readonly Assembly[] _assembly;
 
-        public DllResourceStore(Assembly assembly)
+        public DllResourceStore(Assembly[] assembly)
         {
             _assembly = assembly;
         }
         
-        public DllResourceStore(string assembly)
-        {
-            _assembly = Assembly.LoadFrom(assembly);
-        }
-
+        
         public override byte[] Get(string key)
         {
             using var s = GetStream(key);
@@ -33,8 +30,10 @@ namespace Acryl.Engine.Stores
 
         public override Stream GetStream(string key)
         {
-            var keyName = _assembly.GetName().Name + "." + key.Replace("/", ".");
-            return _assembly.GetManifestResourceStream(keyName);
+            return (
+                from asm in _assembly
+                    let keyName = asm.GetName().Name + "." + key.Replace("/", ".")
+                    select asm.GetManifestResourceStream(keyName)).FirstOrDefault(s => s != null);
         }
 
         public override async Task<byte[]> GetAsync(string key)

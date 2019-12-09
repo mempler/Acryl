@@ -48,20 +48,23 @@ namespace Acryl.Engine
             Dependencies.Add(SpriteBatch = new SpriteBatch(GraphicsDevice));
             Dependencies.Add(GraphicsDeviceManager);
             Dependencies.Add(GraphicsDevice);
-            Dependencies.Add<GameBase>((GameBase) this, "game");
+            Dependencies.Add(this, "game");
 
+            Dependencies.Add(new DllResourceStore(
+                new []{
+                    Assembly.GetAssembly(typeof(GameBase)),
+                    Assembly.GetEntryAssembly()
+                }
+            ), "dllResourceStore");
             Dependencies.Add(new FileResourceStore(), "fileResourceStore");
-            Dependencies.Add(new DllResourceStore(Assembly.GetAssembly(typeof(GameBase))), "dllResourceStore");
-            
-            Dependencies.Add<ResourceStore<byte[]>>(new FileResourceStore(), "fileResourceStore");
-            Dependencies.Add<ResourceStore<byte[]>>(new DllResourceStore(Assembly.GetAssembly(typeof(GameBase))), "dllResourceStore");
-            Dependencies.Add<ResourceStore<byte[]>>(new DllResourceStore(Assembly.GetAssembly(GetType())), "dllResourceStore");
-            
+
             Dependencies.Add(new VirtualField(1280, 720)); // 720p field
             Dependencies.Add(new Library());
             
             Dependencies.Add(new FontFaceStore());
+            Dependencies.Add(new TextureStore());
             Dependencies.Add(depContainer); // Add root DepContainer
+            
             
             await AsyncLoadingPipeline.LoadForObject(GetType(), this, depContainer);
         }
@@ -71,10 +74,11 @@ namespace Acryl.Engine
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             
-            foreach (var child in Children)
-            {
-                child.UpdateFrame(gameTime);
-            }
+            lock (Children)
+                foreach (var child in Children)
+                {
+                    child.UpdateFrame(gameTime);
+                }
         }
         protected override void Draw(GameTime gameTime)
         {
@@ -82,10 +86,11 @@ namespace Acryl.Engine
             
             SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
 
-            foreach (var child in Children)
-            {
-                child.DrawFrame(SpriteBatch, gameTime);
-            }
+            lock (Children)
+                foreach (var child in Children)
+                {
+                    child.DrawFrame(SpriteBatch, gameTime);
+                }
             
             SpriteBatch.End();
             

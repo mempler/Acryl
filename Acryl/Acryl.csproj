@@ -9,4 +9,8 @@
       <ProjectReference Include="..\Acryl.Engine\Acryl.Engine.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <EmbeddedResource Include="Resources\**\*" />
+    </ItemGroup>
+    
 </Project>
