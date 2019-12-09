@@ -32,10 +32,10 @@ namespace Acryl.Scenes
             Add(WarningBody);
             
             WarningSprite.Color = Color.Yellow;
-            WarningSprite.Scale = new Vector2(.2f, .2f);
+            WarningSprite.Scale = new Vector2(.1f, .1f);
             WarningSprite.Origin = Origin.Center;
             WarningSprite.PositionOrigin = Origin.Center;
-            WarningSprite.PositionOffset = new Vector2(-10, -110);
+            WarningSprite.PositionOffset = new Vector2(-8f, -80);
             WarningSprite
                 .FadeTo(1, 1, 0)
                 .Easing(EasingFunctions.SineInOut);
