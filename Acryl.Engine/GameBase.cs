@@ -1,25 +1,29 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Acryl.Engine.Audio;
+using Acryl.Engine.Graphics;
 using Acryl.Engine.Graphics.Core;
 using Acryl.Engine.Stores;
 using Acryl.Engine.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended.Tweening;
 using SharpFont;
 
 namespace Acryl.Engine
 {
-    public class GameBase : Game, IChildrenContainer<Drawable>
+    public class GameBase : Game, IChildrenContainer<Drawable>, IDependencyContainer
     {
         protected SpriteBatch SpriteBatch;
         protected DependencyContainer Dependencies { get; } = new DependencyContainer();
         protected AudioEngine AudioEngine { get; private set; }
         protected Discord.Discord Discord { get; set; }
-
+        protected Scene ActiveScene { get; private set; } = new Scene(); // Empty Scene
         protected GraphicsDeviceManager GraphicsDeviceManager { get; }
+        protected Tweener Tweener { get; private set; }
         
         public GameBase()
         {
@@ -30,8 +34,20 @@ namespace Acryl.Engine
                 SynchronizeWithVerticalRetrace = false,
                 PreferMultiSampling = true
             };
+            IsFixedTimeStep = false;
             
             IsMouseVisible = true;
+        }
+
+        public void SwitchScene(Scene scene)
+        {
+            ActiveScene.SwitchTo(scene)
+                .OnEnd(s =>
+                {
+                    Remove(ActiveScene);
+                    ActiveScene = scene;
+                    Add(scene);
+                });
         }
 
         protected override void Initialize()
@@ -45,26 +61,29 @@ namespace Acryl.Engine
         }
         protected override async void LoadContent()
         {
+            Dependencies.Add(new VirtualField(1280, 720)); // 720p field
+            Dependencies.Add(Tweener = new Tweener());
             Dependencies.Add(SpriteBatch = new SpriteBatch(GraphicsDevice));
             Dependencies.Add(AudioEngine = new AudioEngine());
             Dependencies.Add(GraphicsDeviceManager);
             Dependencies.Add(GraphicsDevice);
-            Dependencies.Add(this, "game");
+            Dependencies.Add(this);
 
             Dependencies.Add(new DllResourceStore(
                 new []{
                     Assembly.GetAssembly(typeof(GameBase)),
                     Assembly.GetEntryAssembly()
                 }
-            ), "dllResourceStore");
-            Dependencies.Add(new FileResourceStore(), "fileResourceStore");
+            ));
+            Dependencies.Add(new FileResourceStore());
 
-            Dependencies.Add(new VirtualField(1280, 720)); // 720p field
             Dependencies.Add(new Library());
             
             Dependencies.Add(new FontFaceStore());
             Dependencies.Add(new TextureStore());
             Dependencies.Add(Dependencies); // Add root DepContainer
+
+            Add(ActiveScene);
             
             await AsyncLoadingPipeline.LoadForObject(GetType(), this, Dependencies);
         }
@@ -74,8 +93,10 @@ namespace Acryl.Engine
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             
+            Tweener.Update((float) gameTime.ElapsedGameTime.TotalSeconds);
+            
             lock (Children)
-                foreach (var child in Children)
+                foreach (var child in Children.ToList())
                 {
                     child.UpdateFrame(gameTime);
                 }
@@ -86,14 +107,12 @@ namespace Acryl.Engine
         {
             GraphicsDevice.Clear(Color.Transparent);
             
-            SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
-
-            lock (Children)
-                foreach (var child in Children)
-                {
-                    child.DrawFrame(SpriteBatch, gameTime);
-                }
+            SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
             
+            lock (Children)
+                foreach (var child in Children.ToList())
+                    child.DrawFrame(SpriteBatch, gameTime);
+
             SpriteBatch.End();
             
             base.Draw(gameTime);
@@ -119,9 +138,15 @@ namespace Acryl.Engine
         }
 
         public Drawable Parent => null;
-        
+        public object ResolveDependency(Type t, string hint = "", bool check = true) => Dependencies;
+
         public async void Add(Drawable child)
         {
+            if (child is DependencyContainer container)
+            {
+                container.Parent = this;
+            }
+            
             await AsyncLoadingPipeline.LoadForObject(child, Dependencies); // Lets load for Drawable first.
             await AsyncLoadingPipeline.LoadForObject(child.GetType(), child, Dependencies);
 
@@ -138,14 +163,12 @@ namespace Acryl.Engine
         protected override void Dispose(bool disposing)
         {
             lock (Children)
-            {
                 foreach (var child in Children)
-                {
                     child?.Dispose(disposing);
-                }
-            }
-            
+
             base.Dispose(disposing);
         }
+
+        IDependencyContainer IDependencyContainer.Parent => Dependencies;
     }
 }

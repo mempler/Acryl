@@ -37,8 +37,9 @@ namespace Acryl.Engine.Graphics.Core
         
         [DependencyResolved]
         private VirtualField Field { get; set; }
-
-        private Tweener _tweener = new Tweener();
+        
+        [DependencyResolved]
+        protected Tweener Tweener { get; set; }
 
         public (Color color, Vector2 pos, float rotation, Vector2 scale, Vector2 origin) CalculateFrame(float width, float height)
         {
@@ -115,21 +116,22 @@ namespace Acryl.Engine.Graphics.Core
         {
             if (!Visible) // Don't draw anything that isn't even visible
                 return;
-
-            _tweener.Update((float) gameTime.ElapsedGameTime.TotalSeconds);
+            
             Draw(spriteBatch, gameTime);
             if (!DrawChildren)
                 return;
             
-            foreach (var child in Children) // Iterate through Child and it's Children to draw a Frame
-                child.DrawFrame(spriteBatch, gameTime);
+            lock(Children)
+                foreach (var child in Children) // Iterate through Child and it's Children to draw a Frame
+                    child.DrawFrame(spriteBatch, gameTime);
         }
         
         public void UpdateFrame(GameTime gameTime)
         {
             Update(gameTime);
-            foreach (var child in Children) // Iterate through Child and it's Children to draw a Frame
-                child.UpdateFrame(gameTime);
+            lock(Children)
+                foreach (var child in Children) // Iterate through Child and it's Children to draw a Frame
+                    child.UpdateFrame(gameTime);
         }
 
         protected virtual void Draw(SpriteBatch spriteBatch, GameTime gameTime)
@@ -142,15 +144,22 @@ namespace Acryl.Engine.Graphics.Core
 
         public Tween<Vector2> MoveTo(Vector2 to, float duration, float delay)
         {
-            return _tweener.TweenTo(this,
+            return Tweener.TweenTo(this,
                 e => e.Position, to,
                 duration, delay);
         }
         
         public Tween<Vector2> ScaleTo(Vector2 to, float duration, float delay)
         {
-            return _tweener.TweenTo(this,
+            return Tweener.TweenTo(this,
                 e => e.Scale, to,
+                duration, delay);
+        }
+        
+        public Tween<float> FadeTo(float to, float duration, float delay)
+        {
+            return Tweener.TweenTo(this,
+                e => e.Alpha, to,
                 duration, delay);
         }
     }

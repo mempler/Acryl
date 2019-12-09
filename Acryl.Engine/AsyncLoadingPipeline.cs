@@ -24,7 +24,8 @@ namespace Acryl.Engine
 
     public interface IDependencyContainer
     {
-        object ResolveDependency(Type t, string hint = "");
+        IDependencyContainer Parent { get;  }
+        object ResolveDependency(Type t, string hint = "", bool check = true);
     }
     
     public class DependencyContainer : IDependencyContainer
@@ -32,6 +33,27 @@ namespace Acryl.Engine
         private readonly List<(Type type, string hint, object dependency)> _dependencies
             = new List<(Type, string, object)>();
 
+        public IDependencyContainer Parent { get; internal set; }
+        public IDependencyContainer RootParent
+        {
+            get
+            {
+                var lastNonNullParent = Parent;
+                var parent = lastNonNullParent;
+
+                do
+                {
+                    parent = parent?.Parent;
+                    if (parent != null)
+                        lastNonNullParent = parent;
+                } while (parent?.Parent != null);
+
+                return lastNonNullParent;
+            }
+        }
+
+        public bool IsRootParent => Parent == null;
+        
         protected internal void Add(object dependency, string hint = "")
         {
             _dependencies.Add((dependency.GetType(), hint, dependency));
@@ -42,19 +64,21 @@ namespace Acryl.Engine
             if (hint == "")
                 hint = dependency.GetType().Name;
             
-            if (dependency is DependencyContainer)
+            if (dependency is DependencyContainer container &&
+                this != dependency as DependencyContainer)
+            {
+                container.Parent = this;
                 DependencyInjector.InjectIntoObject(dependency, this);
+            }
 
             _dependencies.Add((typeof(T), hint, dependency));
         }
 
-        public object ResolveDependency(Type t, string hint = "")
+        public object ResolveDependency(Type t, string hint = "", bool check = false)
         {
-            /*
-            if (t == typeof(DependencyContainer))
-                throw new NotSupportedException("Cannot resolve T as DependencyContainer!");
-            */
-
+            if (!IsRootParent && !check)
+                return RootParent?.ResolveDependency(t, hint, true);
+            
             foreach (var (depType, rHint, dependency) in _dependencies.Where(dep => dep.dependency != null))
             {
                 if (typeof(DependencyContainer).IsSubclassOf(dependency.GetType()))
@@ -95,8 +119,7 @@ namespace Acryl.Engine
 
             return (Task) method.Invoke(obj, args.ToArray());
         }
-
-
+        
         public static void InjectIntoObject(DependencyContainer obj)
             => InjectIntoObject(obj, obj);
         

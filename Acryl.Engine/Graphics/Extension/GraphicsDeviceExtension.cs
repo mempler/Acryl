@@ -1,8 +1,10 @@
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework.Graphics;
+using Svg;
 
 namespace Acryl.Engine.Graphics.Extension
 {
@@ -48,6 +50,16 @@ namespace Acryl.Engine.Graphics.Extension
             texture.SetData( data );
 
             return texture;
+        }
+        
+        public static Texture2D SvgToTexture2D(this GraphicsDevice device, Stream stream, int width = 500, int height = 500)
+        {
+            var doc = SvgDocument.Open<SvgDocument>(stream);
+            
+            doc.Color = new SvgColourServer(Color.White);
+            using var btm = doc.Draw(width, height);
+            var tex = device.GetTexture2DFromBitmap(btm);
+            return tex;
         }
     }
 }

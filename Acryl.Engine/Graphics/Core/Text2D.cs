@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Acryl.Engine.Graphics.Font;
 using Acryl.Engine.Stores;
 using Microsoft.Xna.Framework;
@@ -45,6 +47,8 @@ namespace Acryl.Engine.Graphics.Core
             Text = text;
         }
 
+        private bool invalidated = true;
+        private Texture2D[] cachedTextures;
         protected override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         { 
             if (!Visible || !_isLoaded)
@@ -52,22 +56,39 @@ namespace Acryl.Engine.Graphics.Core
 
             if (_service.Size > Size || _service.Size < Size )
                 _service.Size = Size;
+
+            var s = Text.Split("\n");
+
+            if (invalidated)
+                cachedTextures = s.Select(t => _service.RenderString(t, System.Drawing.Color.White, System.Drawing.Color.Transparent)).ToArray();
+            invalidated = false;
             
-            var tex = _service.RenderString(Text, System.Drawing.Color.White, System.Drawing.Color.Transparent);
+            float lastHeight = 5;
+            foreach (var t in cachedTextures)
+            {
+                var (color, pos, rotation, scale, origin) = CalculateFrame(t.Width, t.Height);
+                
+                spriteBatch.Draw(
+                    t,
+                    pos += new Vector2(0, lastHeight),
+                    null,
+                    color,
+                    rotation,
+                    origin,
+                    scale,
+                    SpriteEffects.None,
+                    0
+                );
+                
+                lastHeight += t.Height;
+            }
+        }
+
+        public override void Dispose(bool isDisposing)
+        {
+            _service.Dispose();
             
-            var (color, pos, rotation, scale, origin) = CalculateFrame(tex.Width, tex.Height);
-            
-            spriteBatch.Draw(
-                tex,
-                pos,
-                null,
-                color,
-                rotation,
-                origin,
-                scale,
-                SpriteEffects.None,
-                0
-            );
+            base.Dispose(isDisposing);
         }
     }
 }

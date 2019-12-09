@@ -40,8 +40,14 @@ namespace Acryl.Engine.Utility
         public T Parent { get; private set; }
 
         public void Add(T child)
-        {
-            AsyncLoadingPipeline.LoadForObject(child);
+        { 
+            if (child is DependencyContainer container)
+            {
+                container.Parent = this;
+            }
+            
+            AsyncLoadingPipeline.LoadForObject(child, this).Wait(); // Lets load for Drawable first.
+            AsyncLoadingPipeline.LoadForObject(child.GetType(), child, this).Wait();
             
             child.Parent = (T) this;
             lock (Children)
@@ -51,7 +57,6 @@ namespace Acryl.Engine.Utility
         public void Remove(T child)
         {
             child.Parent = null;
-            
             lock (Children)
                 Children.Remove(child);
         }
@@ -59,12 +64,8 @@ namespace Acryl.Engine.Utility
         public virtual void Dispose(bool isDisposing)
         {
             lock (Children)
-            {
                 foreach (var child in Children)
-                {
                     child?.Dispose(isDisposing);
-                }
-            }
         }
         
         public void Dispose()

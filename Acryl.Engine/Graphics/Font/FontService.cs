@@ -174,7 +174,12 @@ namespace Acryl.Engine.Graphics.Font
 			{
 				#region Load character
 				var c = text[i];
-
+				
+				if (c == '\n') {
+					bottom *= 2.5f;
+					continue;
+				}
+				
 				// Look up the glyph index for this character.
 				var glyphIndex = face.GetCharIndex(c);
 

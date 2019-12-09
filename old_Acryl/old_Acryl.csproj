@@ -53,12 +53,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Content\SkinnableTextures\Menu" />
-      <Folder Include="Content\SkinnableTextures\Rulesets\osu\Cursor" />
-      <Folder Include="Graphics\AntiAliasing\SMAA" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Remove="Icon.bmp" />
       <None Remove="Icon.ico" />
       <EmbeddedResource Include="Icon.bmp">

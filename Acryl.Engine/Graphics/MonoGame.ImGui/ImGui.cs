@@ -27,11 +27,11 @@ namespace Acryl.Engine.Graphics.MonoGame.ImGui
             
             _renderer.BeforeLayout(gameTime);
 
-            foreach (var child in Children) // Draw inside ImGui's Batch.
-            {
-                child.DrawFrame(spriteBatch, gameTime);
-            }
-            
+            lock(Children)
+                foreach (var child in Children) // Draw inside ImGui's Batch.
+                    child.DrawFrame(spriteBatch, gameTime);
+
+                
             _renderer.AfterLayout();
             
             base.Draw(spriteBatch, gameTime);

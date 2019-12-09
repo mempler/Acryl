@@ -34,12 +34,20 @@ namespace Acryl.Engine.Stores
             if (data == null)
                 throw new FileNotFoundException($"{key} Not found!");
 
-            using var img = Image.FromStream(data);
-            using var btm = new Bitmap(img);
-            var tex = Device.GetTexture2DFromBitmap(btm);
+            Texture2D tex;
+            if (!key.EndsWith(".svg"))
+            {
+                using var img = Image.FromStream(data);
+                using var btm = new Bitmap(img);
+                tex = Device.GetTexture2DFromBitmap(btm);
 
-            _cachedTextures[key] = tex;
+                _cachedTextures[key] = tex;
             
+                return tex;
+            }
+
+            tex = Device.SvgToTexture2D(data, 0, 0);
+            _cachedTextures[key] = tex;
             return tex;
         }
 
