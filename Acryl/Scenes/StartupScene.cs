@@ -35,7 +35,7 @@ namespace Acryl.Scenes
             WarningSprite.Scale = new Vector2(.2f, .2f);
             WarningSprite.Origin = Origin.Center;
             WarningSprite.PositionOrigin = Origin.Center;
-            WarningSprite.PositionOffset = new Vector2(-10, -100);
+            WarningSprite.PositionOffset = new Vector2(-10, -110);
             WarningSprite
                 .FadeTo(1, 1, 0)
                 .Easing(EasingFunctions.SineInOut);

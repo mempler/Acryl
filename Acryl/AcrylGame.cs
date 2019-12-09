@@ -23,9 +23,9 @@ namespace Acryl
         [LoadAsync]
         private async void Load(TextureStore store)
         {
-            ImGui = new MonoImGui();
-            Add(ImGui);
-            ImGui.Add(new ImGuiDebugger());
+            //ImGui = new MonoImGui();
+            //Add(ImGui);
+            //ImGui.Add(new ImGuiDebugger());
             
             /*
             Text = new Text2D("Hello World!") {Size = 16};

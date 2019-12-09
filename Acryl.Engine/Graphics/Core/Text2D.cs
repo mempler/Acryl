@@ -63,7 +63,7 @@ namespace Acryl.Engine.Graphics.Core
                 cachedTextures = s.Select(t => _service.RenderString(t, System.Drawing.Color.White, System.Drawing.Color.Transparent)).ToArray();
             invalidated = false;
             
-            float lastHeight = 5;
+            float lastHeight = 0;
             foreach (var t in cachedTextures)
             {
                 var (color, pos, rotation, scale, origin) = CalculateFrame(t.Width, t.Height);
@@ -80,7 +80,7 @@ namespace Acryl.Engine.Graphics.Core
                     0
                 );
                 
-                lastHeight += t.Height;
+                lastHeight += t.Height * 1.1f;
             }
         }
 
