@@ -2,7 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Acryl.Extension.Discord
+namespace Acryl.Engine.Discord
 {
     public enum Result
     {

@@ -17,6 +17,7 @@ namespace Acryl.Engine
         protected SpriteBatch SpriteBatch;
         protected DependencyContainer Dependencies { get; } = new DependencyContainer();
         protected AudioEngine AudioEngine { get; private set; }
+        protected Discord.Discord Discord { get; set; }
 
         protected GraphicsDeviceManager GraphicsDeviceManager { get; }
         
@@ -78,6 +79,8 @@ namespace Acryl.Engine
                 {
                     child.UpdateFrame(gameTime);
                 }
+            
+            Discord?.RunCallbacks();
         }
         protected override void Draw(GameTime gameTime)
         {

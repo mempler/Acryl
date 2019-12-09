@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Acryl.Extension.Discord
+namespace Acryl.Engine.Discord
 {
     public partial class StorageManager
     {

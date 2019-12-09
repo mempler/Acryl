@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Acryl.Extension.Discord
+namespace Acryl.Engine.Discord
 {
     public partial class LobbyManager
     {

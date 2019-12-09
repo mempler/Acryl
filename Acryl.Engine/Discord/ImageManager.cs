@@ -4,7 +4,7 @@ using System;
 using UnityEngine;
 #endif
 
-namespace Acryl.Extension.Discord
+namespace Acryl.Engine.Discord
 {
 	public partial struct ImageHandle
     {

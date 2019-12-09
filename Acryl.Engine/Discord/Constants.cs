@@ -1,4 +1,4 @@
-﻿namespace Acryl.Extension.Discord
+﻿namespace Acryl.Engine.Discord
 {
     static class Constants
     {
