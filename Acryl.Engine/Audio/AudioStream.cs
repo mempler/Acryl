@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using ManagedBass;
 
-namespace Acryl.Audio
+namespace Acryl.Engine.Audio
 {
     public class AudioStream : IDisposable
     {

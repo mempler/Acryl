@@ -29,10 +29,12 @@ namespace Acryl
             Add(Text);
             
             var tex = await store.GetAsync("Resources/Textures/AcrylSmall.png");
-            _sprite = new Sprite(tex);
-            _sprite.Scale  = new Vector2(.2f, .2f);
-            _sprite.Origin = Origin.Center;
-            _sprite.PositionOrigin = Origin.Center;
+            _sprite = new Sprite(tex)
+            {
+                Scale = new Vector2(.2f, .2f),
+                Origin = Origin.Center,
+                PositionOrigin = Origin.Center,
+            };
             Add(_sprite);
         }
     }

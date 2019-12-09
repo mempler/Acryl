@@ -1,7 +1,7 @@
 using System;
 using ManagedBass;
 
-namespace Acryl.Audio
+namespace Acryl.Engine.Audio
 {
     public class AudioEngine : IDisposable
     {

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Acryl.Engine.Audio;
 using Acryl.Engine.Graphics.Core;
 using Acryl.Engine.Stores;
 using Acryl.Engine.Utility;
@@ -13,13 +14,11 @@ namespace Acryl.Engine
 {
     public class GameBase : Game, IChildrenContainer<Drawable>
     {
-        private DependencyContainer depContainer
-            = new DependencyContainer();
-
         protected SpriteBatch SpriteBatch;
-        protected DependencyContainer Dependencies => depContainer;
-        
-        public GraphicsDeviceManager GraphicsDeviceManager { get; }
+        protected DependencyContainer Dependencies { get; } = new DependencyContainer();
+        protected AudioEngine AudioEngine { get; private set; }
+
+        protected GraphicsDeviceManager GraphicsDeviceManager { get; }
         
         public GameBase()
         {
@@ -46,6 +45,7 @@ namespace Acryl.Engine
         protected override async void LoadContent()
         {
             Dependencies.Add(SpriteBatch = new SpriteBatch(GraphicsDevice));
+            Dependencies.Add(AudioEngine = new AudioEngine());
             Dependencies.Add(GraphicsDeviceManager);
             Dependencies.Add(GraphicsDevice);
             Dependencies.Add(this, "game");
@@ -63,10 +63,9 @@ namespace Acryl.Engine
             
             Dependencies.Add(new FontFaceStore());
             Dependencies.Add(new TextureStore());
-            Dependencies.Add(depContainer); // Add root DepContainer
+            Dependencies.Add(Dependencies); // Add root DepContainer
             
-            
-            await AsyncLoadingPipeline.LoadForObject(GetType(), this, depContainer);
+            await AsyncLoadingPipeline.LoadForObject(GetType(), this, Dependencies);
         }
         protected override void Update(GameTime gameTime)
         {
@@ -84,7 +83,7 @@ namespace Acryl.Engine
         {
             GraphicsDevice.Clear(Color.Transparent);
             
-            SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
+            SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
 
             lock (Children)
                 foreach (var child in Children)
@@ -120,8 +119,8 @@ namespace Acryl.Engine
         
         public async void Add(Drawable child)
         {
-            await AsyncLoadingPipeline.LoadForObject(child, depContainer); // Lets load for Drawable first.
-            await AsyncLoadingPipeline.LoadForObject(child.GetType(), child, depContainer);
+            await AsyncLoadingPipeline.LoadForObject(child, Dependencies); // Lets load for Drawable first.
+            await AsyncLoadingPipeline.LoadForObject(child.GetType(), child, Dependencies);
 
             lock (Children)
                 Children.Add(child);
