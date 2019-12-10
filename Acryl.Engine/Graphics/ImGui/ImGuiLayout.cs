@@ -1,6 +1,6 @@
 using Acryl.Engine.Graphics.Core;
 
-namespace Acryl.Engine.Graphics.MonoGame.ImGui
+namespace Acryl.Engine.Graphics.ImGui
 {
     public class ImGuiLayout : Drawable
     {

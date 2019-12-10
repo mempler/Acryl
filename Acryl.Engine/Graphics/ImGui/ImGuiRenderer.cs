@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 // https://github.com/mellinoe/ImGui.NET/blob/master/src/ImGui.NET.SampleProgram.XNA/ImGuiRenderer.cs
-namespace Acryl.Engine.Graphics.MonoGame.ImGui
+namespace Acryl.Engine.Graphics.ImGui
 {
     /// <summary>
     /// ImGui renderer for use with XNA-likes (FNA & MonoGame)

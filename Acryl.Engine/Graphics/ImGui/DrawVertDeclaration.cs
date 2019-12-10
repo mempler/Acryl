@@ -2,7 +2,7 @@ using ImGuiNET;
 using Microsoft.Xna.Framework.Graphics;
 
 // https://github.com/mellinoe/ImGui.NET/blob/master/src/ImGui.NET.SampleProgram.XNA/DrawVertDeclaration.cs
-namespace Acryl.Engine.Graphics.MonoGame.ImGui
+namespace Acryl.Engine.Graphics.ImGui
 {
     public static class DrawVertDeclaration
     {

@@ -2,7 +2,7 @@ using Acryl.Engine.Graphics.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Acryl.Engine.Graphics.MonoGame.ImGui
+namespace Acryl.Engine.Graphics.ImGui
 {
     public class MonoImGui : Drawable
     {

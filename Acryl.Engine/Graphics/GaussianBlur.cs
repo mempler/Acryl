@@ -21,11 +21,11 @@
 //-----------------------------------------------------------------------------
 
 using System;
-using Acryl.Graphics.Skin;
+using Acryl.Engine.Stores;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Acryl.Graphics
+namespace Acryl.Engine.Graphics
 {
     /// <summary>
     /// A Gaussian blur filter kernel class. A Gaussian blur filter kernel is
@@ -81,8 +81,16 @@ namespace Acryl.Graphics
     /// offsetsHoriz and offsetsVert fields.
     /// </para>
     /// </summary>
-    public class GaussianBlur
+    public class GaussianBlur : DependencyContainer
     {
+        private readonly SpriteBatch _spriteBatch;
+
+        [DependencyResolved]
+        private EffectStore EffectStore { get; set; }
+        
+        [DependencyResolved]
+        private GraphicsDevice Device { get; set; }
+        
         private Effect _effect;
         private int _radius;
         private float _amount;
@@ -135,10 +143,19 @@ namespace Acryl.Graphics
         /// be already bound to the asset name: 'Effects\GaussianBlur' or
         /// 'GaussianBlur'.
         /// </summary>
-        public GaussianBlur(float strength)
+        public GaussianBlur(float strength, SpriteBatch spriteBatch)
         {
-            _effect = SkinManager.GetEffect("Effects/Blur");
+            _spriteBatch = spriteBatch;
             ComputeKernel(7, strength);
+        }
+
+        private bool _isLoaded;
+        [LoadAsync]
+        private void Load()
+        {
+            _effect = EffectStore.Get("Resources/Shaders/Blur");
+
+            _isLoaded = true;
         }
 
         /// <summary>
@@ -161,8 +178,8 @@ namespace Acryl.Graphics
             var twoSigmaSquare = 2.0f * _sigma * _sigma;
             var sigmaRoot = (float)Math.Sqrt(twoSigmaSquare * Math.PI);
             var total = 0.0f;
-            var distance = 0.0f;
-            var index = 0;
+            float distance;
+            int index;
 
             for (var i = -_radius; i <= _radius; ++i)
             {
@@ -195,7 +212,7 @@ namespace Acryl.Graphics
             _offsetsVert = null;
             _offsetsVert = new Vector2[_radius * 2 + 1];
 
-            var index = 0;
+            int index;
             var xOffset = 1.0f / textureWidth;
             var yOffset = 1.0f / textureHeight;
 
@@ -216,59 +233,59 @@ namespace Acryl.Graphics
         /// is therefore equal to the dimensions of renderTarget2.
         /// </summary>
         /// <param name="srcTexture">The source image to blur.</param>
-        /// <param name="renderTarget1">Stores the output from the horizontal blur pass.</param>
-        /// <param name="renderTarget2">Stores the output from the vertical blur pass.</param>
-        /// <param name="spriteBatch">Used to draw quads for the blur passes.</param>
         /// <returns>The resulting Gaussian blurred image.</returns>
         public Texture2D PerformGaussianBlur(Texture2D srcTexture)
         {
+            if (!_isLoaded)
+                return null; // Not loaded yet.
+            
             if (_effect == null)
                 throw new InvalidOperationException("GaussianBlur.fx effect not loaded.");
 
-            var renderTargetWidth = srcTexture.Width / 2;
-            var renderTargetHeight = srcTexture.Height / 2;
+            var renderTargetWidth = srcTexture.Width;
+            var renderTargetHeight = srcTexture.Height;
 
-            var renderTarget1 = new RenderTarget2D(AcrylGame.Game.GraphicsDevice, renderTargetWidth, renderTargetHeight, false,
-                AcrylGame.Game.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.None);
+            var renderTarget1 = new RenderTarget2D(Device, renderTargetWidth, renderTargetHeight, false,
+                Device.PresentationParameters.BackBufferFormat, DepthFormat.None);
 
-            var renderTarget2 = new RenderTarget2D(AcrylGame.Game.GraphicsDevice, renderTargetWidth, renderTargetHeight, false,
-                AcrylGame.Game.GraphicsDevice.PresentationParameters.BackBufferFormat,
+            var renderTarget2 = new RenderTarget2D(Device, renderTargetWidth, renderTargetHeight, false,
+                Device.PresentationParameters.BackBufferFormat,
                 DepthFormat.None);
 
             ComputeOffsets(renderTargetWidth, renderTargetHeight);
 
-            Texture2D outputTexture = null;
+            Texture2D outputTexture;
             var destRect1 = new Rectangle(0, 0, renderTarget1.Width, renderTarget1.Height);
             var destRect2 = new Rectangle(0, 0, renderTarget2.Width, renderTarget2.Height);
 
             // Perform horizontal Gaussian blur.
 
-            AcrylGame.Game.GraphicsDevice.SetRenderTarget(renderTarget1);
+            Device.SetRenderTarget(renderTarget1);
 
             _effect.CurrentTechnique = _effect.Techniques["GaussianBlur"];
             _effect.Parameters["weights"].SetValue(_kernel);
             _effect.Parameters["colorMapTexture"].SetValue(srcTexture);
             _effect.Parameters["offsets"].SetValue(_offsetsHoriz);
 
-            AcrylGame.Game.SpriteBatch.Begin(0, BlendState.Opaque, null, null, null, _effect);
-            AcrylGame.Game.SpriteBatch.Draw(srcTexture, destRect1, Color.White);
-            AcrylGame.Game.SpriteBatch.End();
+            _spriteBatch.Begin(0, BlendState.Opaque, null, null, null, _effect);
+            _spriteBatch.Draw(srcTexture, destRect1, Color.White);
+            _spriteBatch.End();
 
             // Perform vertical Gaussian blur.
 
-            AcrylGame.Game.GraphicsDevice.SetRenderTarget(renderTarget2);
+            Device.SetRenderTarget(renderTarget2);
             outputTexture = renderTarget1;
 
             _effect.Parameters["colorMapTexture"].SetValue(outputTexture);
             _effect.Parameters["offsets"].SetValue(_offsetsVert);
 
-            AcrylGame.Game.SpriteBatch.Begin(0, BlendState.Opaque, null, null, null, _effect);
-            AcrylGame.Game.SpriteBatch.Draw(outputTexture, destRect2, Color.White);
-            AcrylGame.Game.SpriteBatch.End();
+            _spriteBatch.Begin(0, BlendState.Opaque, null, null, null, _effect);
+            _spriteBatch.Draw(outputTexture, destRect2, Color.White);
+            _spriteBatch.End();
 
             // Return the Gaussian blurred texture.
 
-            AcrylGame.Game.GraphicsDevice.SetRenderTarget(null);
+            Device.SetRenderTarget(null);
             outputTexture = renderTarget2;
 
             renderTarget1.Dispose();

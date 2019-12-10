@@ -1,8 +1,9 @@
 using Acryl.Engine;
 using Acryl.Engine.Graphics.Core;
-using Acryl.Engine.Graphics.MonoGame.ImGui;
-using Acryl.Engine.Graphics.MonoGame.ImGui.Layouts;
+using Acryl.Engine.Graphics.ImGui;
+using Acryl.Engine.Graphics.ImGui.Layouts;
 using Acryl.Engine.Stores;
+using Acryl.ImGuiLayouts;
 using Acryl.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -21,8 +22,9 @@ namespace Acryl
         {
             ImGui = new MonoImGui();
             Add(ImGui); // Load dependencies
-            ImGui.Add(new ImGuiDebugger());
+            //ImGui.Add(new ImGuiDebugger());
             Remove(ImGui); // Remove from children.
+            Dependencies.Add(ImGui);
 
             /*
             Text = new Text2D("Hello World!") {Size = 16};

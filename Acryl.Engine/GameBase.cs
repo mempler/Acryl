@@ -30,7 +30,7 @@ namespace Acryl.Engine
             {
                 PreferredBackBufferWidth = 1280,
                 PreferredBackBufferHeight = 720,
-                SynchronizeWithVerticalRetrace = false,
+                SynchronizeWithVerticalRetrace = true,
                 PreferMultiSampling = true
             };
             IsFixedTimeStep = false;
@@ -82,6 +82,7 @@ namespace Acryl.Engine
             
             Dependencies.Add(new FontFaceStore());
             Dependencies.Add(new TextureStore());
+            Dependencies.Add(new EffectStore());
             Dependencies.Add(Dependencies); // Add root DepContainer
 
             Add(ActiveScene);

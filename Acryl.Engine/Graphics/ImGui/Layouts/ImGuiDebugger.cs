@@ -2,7 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Acryl.Engine.Graphics.MonoGame.ImGui.Layouts
+namespace Acryl.Engine.Graphics.ImGui.Layouts
 {
     using ImGui = ImGuiNET.ImGui;
     public class ImGuiDebugger : ImGuiLayout

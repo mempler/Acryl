@@ -59,7 +59,7 @@ namespace Acryl.Engine
             _dependencies.Add((dependency.GetType(), hint, dependency));
         }
         
-        protected internal void Add<T>(T dependency, string hint = "")
+        public void Add<T>(T dependency, string hint = "")
         {
             if (hint == "")
                 hint = dependency.GetType().Name;
