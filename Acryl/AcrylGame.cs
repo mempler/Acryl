@@ -1,4 +1,5 @@
 using Acryl.Engine;
+using Acryl.Engine.Graphics;
 using Acryl.Engine.Graphics.Core;
 using Acryl.Engine.Graphics.ImGui;
 using Acryl.Engine.Graphics.ImGui.Layouts;
@@ -49,8 +50,27 @@ namespace Acryl
                 .Easing(EasingFunctions.BounceOut);
             */
 
-            //SwitchScene(new StartupScene());
-            SwitchScene(new GameplayScene());
+            Remove(ActiveScene);
+            ActiveScene = new StartupScene();
+            Add(ActiveScene);
+            
+            SwitchScene(new GameplayScene(), 2, 4);
+            /*
+            ActiveScene = new StartupScene();
+            Add(ActiveScene);
+
+            ActiveScene.FadeTo(0, 1, 5)
+                .OnEnd(x =>
+                {
+                    Remove(ActiveScene);
+                    
+                    ActiveScene = new GameplayScene();
+                    
+                    Add(ActiveScene);
+                });
+            */
+
+            //.OnEnd(s =>);
         }
 
         protected override void Draw(GameTime gameTime)

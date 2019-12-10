@@ -21,8 +21,10 @@ namespace Acryl.Engine
         protected DependencyContainer Dependencies { get; } = new DependencyContainer();
         protected AudioEngine AudioEngine { get; private set; }
         protected Discord.Discord Discord { get; set; }
-        protected Scene ActiveScene { get; private set; } = new Scene(); // Empty Scene
+        protected Scene ActiveScene { get; set; } = new Scene(); // Empty Scene
         protected GraphicsDeviceManager GraphicsDeviceManager { get; }
+        
+        private Tweener sceneTweener = new Tweener();
 
         public GameBase()
         {
@@ -30,7 +32,7 @@ namespace Acryl.Engine
             {
                 PreferredBackBufferWidth = 1280,
                 PreferredBackBufferHeight = 720,
-                SynchronizeWithVerticalRetrace = true,
+                SynchronizeWithVerticalRetrace = false,
                 PreferMultiSampling = true
             };
             IsFixedTimeStep = false;
@@ -38,17 +40,23 @@ namespace Acryl.Engine
             IsMouseVisible = true;
         }
 
-        public Tween SwitchScene(Scene scene, float delay = 0)
+        public void SwitchScene(Scene scene, float duration, float delay = 0)
         {
-            return
-                ActiveScene
-                    .SwitchTo(scene, delay)
-                    .OnEnd(s =>
-                    {
-                        Remove(ActiveScene);
-                        ActiveScene = scene;
-                        Add(scene);
-                    });
+            ActiveScene
+                .FadeTo(0, duration, delay)
+                .OnEnd(x =>
+                {
+                    Remove(ActiveScene);
+                    
+                    scene.Alpha = 0;
+                    ActiveScene = scene;
+
+                    ActiveScene
+                        .FadeTo(1, duration, 0);
+                    
+                    Add(ActiveScene);
+                })
+                .Easing(EasingFunctions.SineInOut);
         }
 
         protected override void Initialize()
@@ -94,6 +102,8 @@ namespace Acryl.Engine
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+            
+            sceneTweener.Update((float) gameTime.ElapsedGameTime.TotalSeconds);
             
             lock (Children)
                 foreach (var child in Children.ToList())

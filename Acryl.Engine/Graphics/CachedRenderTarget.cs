@@ -92,6 +92,8 @@ namespace Acryl.Engine.Graphics
                     Blur ?
                         _blur.PerformGaussianBlur(_renderTarget2D) :
                         _renderTarget2D;
+
+                Invalidated = false;
             }
 
 
