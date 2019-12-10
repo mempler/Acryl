@@ -23,8 +23,7 @@ namespace Acryl.Engine
         protected Discord.Discord Discord { get; set; }
         protected Scene ActiveScene { get; private set; } = new Scene(); // Empty Scene
         protected GraphicsDeviceManager GraphicsDeviceManager { get; }
-        protected Tweener Tweener { get; private set; }
-        
+
         public GameBase()
         {
             GraphicsDeviceManager = new GraphicsDeviceManager(this)
@@ -39,9 +38,10 @@ namespace Acryl.Engine
             IsMouseVisible = true;
         }
 
-        public void SwitchScene(Scene scene)
+        public Tween SwitchScene(Scene scene, float delay = 0)
         {
-            ActiveScene.SwitchTo(scene)
+            return
+                ActiveScene.SwitchTo(scene, delay)
                 .OnEnd(s =>
                 {
                     Remove(ActiveScene);
@@ -62,7 +62,6 @@ namespace Acryl.Engine
         protected override async void LoadContent()
         {
             Dependencies.Add(new VirtualField(1280, 720)); // 720p field
-            Dependencies.Add(Tweener = new Tweener());
             Dependencies.Add(SpriteBatch = new SpriteBatch(GraphicsDevice));
             Dependencies.Add(AudioEngine = new AudioEngine());
             Dependencies.Add(GraphicsDeviceManager);
@@ -92,8 +91,6 @@ namespace Acryl.Engine
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            
-            Tweener.Update((float) gameTime.ElapsedGameTime.TotalSeconds);
             
             lock (Children)
                 foreach (var child in Children.ToList())

@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Acryl.Extension.Discord;
-using Acryl.Graphics.Elements;
 using Acryl.Rulesets;
 using Acryl.Rulesets.osu;
 using Microsoft.Xna.Framework;

@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using Acryl.Graphics;
 using Microsoft.Xna.Framework;

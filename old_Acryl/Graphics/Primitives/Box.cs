@@ -1,7 +1,5 @@
-using Acryl.Extension;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using static Acryl.Graphics.Origin;
 
 namespace Acryl.Graphics.Primitives
 {

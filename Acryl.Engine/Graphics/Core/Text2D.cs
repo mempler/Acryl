@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using Acryl.Engine.Graphics.Font;
 using Acryl.Engine.Stores;

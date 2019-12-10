@@ -1,9 +1,5 @@
 using System.Collections.Generic;
-using Acryl.Extension;
-using Acryl.Graphics;
-using Acryl.Graphics.Elements;
 using Acryl.Graphics.Skin;
-using Acryl.osu;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Color = Microsoft.Xna.Framework.Color;

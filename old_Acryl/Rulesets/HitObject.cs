@@ -1,5 +1,3 @@
-using Acryl.Graphics;
-
 namespace Acryl.Rulesets
 {
     public enum HitObjectKind

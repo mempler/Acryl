@@ -1,11 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using Acryl.Audio;
-using Acryl.Extension.Discord;
 using Acryl.Graphics;
 using Acryl.Graphics.Scenes;
-using Acryl.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;

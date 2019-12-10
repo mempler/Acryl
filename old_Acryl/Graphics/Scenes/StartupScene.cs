@@ -1,4 +1,3 @@
-using Acryl.Graphics.Elements;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 

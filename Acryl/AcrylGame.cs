@@ -1,13 +1,10 @@
-using System;
 using Acryl.Engine;
 using Acryl.Engine.Graphics.Core;
 using Acryl.Engine.Graphics.MonoGame.ImGui;
 using Acryl.Engine.Graphics.MonoGame.ImGui.Layouts;
 using Acryl.Engine.Stores;
 using Acryl.Scenes;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended.Tweening;
 
 namespace Acryl
 {
@@ -15,17 +12,15 @@ namespace Acryl
     {
         [DependencyResolved]
         private GraphicsDevice Device { get; set; }
-
-        private Sprite _sprite;
-        private MonoImGui ImGui;
-        private Text2D Text;
         
+        private MonoImGui ImGui;
+
         [LoadAsync]
-        private async void Load(TextureStore store)
+        private void Load(TextureStore store)
         {
-            //ImGui = new MonoImGui();
-            //Add(ImGui);
-            //ImGui.Add(new ImGuiDebugger());
+            ImGui = new MonoImGui();
+            Add(ImGui);
+            ImGui.Add(new ImGuiDebugger());
             
             /*
             Text = new Text2D("Hello World!") {Size = 16};

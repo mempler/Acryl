@@ -1,5 +1,4 @@
 using Acryl.Graphics;
-using Acryl.Graphics.Elements;
 using Acryl.Rulesets.Layers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

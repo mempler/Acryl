@@ -38,7 +38,17 @@ namespace Acryl.Scenes
             WarningSprite.PositionOffset = new Vector2(-8f, -80);
             WarningSprite
                 .FadeTo(1, 1, 0)
-                .Easing(EasingFunctions.SineInOut);
+                .Easing(EasingFunctions.SineInOut)
+                .OnEnd(t =>
+                {
+                    WarningSprite
+                        .FadeTo(0, 2, 3f)
+                        .Easing(EasingFunctions.SineInOut);
+
+                    WarningSprite
+                        .MoveTo(new Vector2(-5000, -25), 32, 3f)
+                        .Easing(EasingFunctions.SineInOut);
+                });;
 
             WarningHeader.Color = Color.Yellow;
             WarningHeader.Origin = Origin.Center;
@@ -46,13 +56,34 @@ namespace Acryl.Scenes
             WarningHeader.PositionOffset += new Vector2(0, -25);
             WarningHeader
                 .FadeTo(1, 2, 0)
-                .Easing(EasingFunctions.SineInOut);
+                .Easing(EasingFunctions.SineInOut)
+                .OnEnd(t =>
+                {
+                    WarningHeader
+                        .FadeTo(0, 2, 2.3f)
+                        .Easing(EasingFunctions.SineInOut);
+
+                    WarningHeader
+                        .MoveTo(new Vector2(-5000, -25), 32, 2.3f)
+                        .Easing(EasingFunctions.SineInOut);
+                });
             
             WarningBody.Origin = Origin.Center;
             WarningBody.PositionOrigin = Origin.Center;
             WarningBody
                 .FadeTo(1, 2, .5f)
-                .Easing(EasingFunctions.SineInOut);
+                .Easing(EasingFunctions.SineInOut)
+                .OnEnd(t =>
+                {
+                    WarningBody
+                        .FadeTo(0, 2, 2)
+                        .Easing(EasingFunctions.SineInOut);
+
+                    WarningBody
+                        .MoveTo(new Vector2(-5000, 0), 32, 2)
+                        .Easing(EasingFunctions.SineInOut);
+                });
+            
         }
     }
 }

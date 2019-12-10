@@ -1,8 +1,5 @@
 using System;
-using Acryl.Graphics;
-using Acryl.Graphics.Elements;
 using Acryl.Graphics.Skin;
-using Acryl.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 

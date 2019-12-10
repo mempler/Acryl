@@ -38,8 +38,7 @@ namespace Acryl.Engine.Graphics.Core
         [DependencyResolved]
         private VirtualField Field { get; set; }
         
-        [DependencyResolved]
-        protected Tweener Tweener { get; set; }
+        protected Tweener Tweener { get; } = new Tweener();
 
         public (Color color, Vector2 pos, float rotation, Vector2 scale, Vector2 origin) CalculateFrame(float width, float height)
         {
@@ -129,6 +128,9 @@ namespace Acryl.Engine.Graphics.Core
         public void UpdateFrame(GameTime gameTime)
         {
             Update(gameTime);
+            
+            Tweener.Update((float) gameTime.ElapsedGameTime.TotalSeconds);
+
             lock(Children)
                 foreach (var child in Children) // Iterate through Child and it's Children to draw a Frame
                     child.UpdateFrame(gameTime);

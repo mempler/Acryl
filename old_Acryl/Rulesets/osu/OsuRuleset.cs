@@ -1,7 +1,4 @@
-using Acryl.Graphics.Elements;
 using Acryl.Rulesets.osu.Layers;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Acryl.Rulesets.osu
 {
