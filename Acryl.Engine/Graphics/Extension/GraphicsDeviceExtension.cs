@@ -1,4 +1,3 @@
-using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -30,26 +29,6 @@ namespace Acryl.Engine.Graphics.Extension
             bitmap.UnlockBits(data);
 
             return tex;
-        }
-        
-        // https://github.com/mellinoe/ImGui.NET/blob/master/src/ImGui.NET.SampleProgram.XNA/SampleGame.cs
-        public static Texture2D CreateTexture(this GraphicsDevice device, int width, int height, Func<int, Microsoft.Xna.Framework.Color> paint)
-        {
-            //initialize a texture
-            var texture = new Texture2D(device, width, height);
-
-            //the array holds the color for each pixel in the texture
-            var data = new Microsoft.Xna.Framework.Color[width * height];
-            for(var pixel = 0; pixel < data.Length; pixel++)
-            {
-                //the function applies the color according to the specified pixel
-                data[pixel] = paint( pixel );
-            }
-
-            //set the color
-            texture.SetData( data );
-
-            return texture;
         }
         
         public static Texture2D SvgToTexture2D(this GraphicsDevice device, Stream stream, int width = 500, int height = 500)

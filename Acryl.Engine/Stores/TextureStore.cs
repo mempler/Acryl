@@ -19,16 +19,23 @@ namespace Acryl.Engine.Stores
         private DllResourceStore DllResource { get; set; }
         
         [DependencyResolved]
+        private OnlineStore OnlineStore { get; set; }
+        
+        [DependencyResolved]
         private GraphicsDevice Device { get; set; }
         
         public override Texture2D Get(string key)
         {
             if (_cachedTextures.TryGetValue(key, out var t))
                 return t;
-            
-            using var data = key.StartsWith("file://") ?
-                FileStore.GetStream(key) :
-                DllResource.GetStream(key);
+
+            Stream data;
+            if (key.StartsWith("file://"))
+                data = FileStore.GetStream(key);
+            else if (key.StartsWith("http://") || key.StartsWith("https://"))
+                data = OnlineStore.GetStream(key);
+            else
+                data = DllResource.GetStream(key);
             
             if (data == null)
                 throw new FileNotFoundException($"{key} Not found!");
@@ -36,17 +43,16 @@ namespace Acryl.Engine.Stores
             Texture2D tex;
             if (!key.EndsWith(".svg"))
             {
-                using var img = Image.FromStream(data);
-                using var btm = new Bitmap(img);
-                tex = Device.GetTexture2DFromBitmap(btm);
-
+                tex = Texture2D.FromStream(Device, data);
                 _cachedTextures[key] = tex;
             
+                data.Dispose();
                 return tex;
             }
 
             tex = Device.SvgToTexture2D(data, 0, 0);
             _cachedTextures[key] = tex;
+            data.Dispose();
             return tex;
         }
 

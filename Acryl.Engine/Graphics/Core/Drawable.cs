@@ -36,7 +36,7 @@ namespace Acryl.Engine.Graphics.Core
         public bool DrawChildren = true;
         
         [DependencyResolved]
-        private VirtualField Field { get; set; }
+        protected VirtualField Field { get; set; }
         
         protected Tweener Tweener { get; } = new Tweener();
 
