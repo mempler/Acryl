@@ -4,6 +4,7 @@ using Acryl.Engine.Graphics.MonoGame.ImGui;
 using Acryl.Engine.Graphics.MonoGame.ImGui.Layouts;
 using Acryl.Engine.Stores;
 using Acryl.Scenes;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Acryl
@@ -19,9 +20,10 @@ namespace Acryl
         private void Load(TextureStore store)
         {
             ImGui = new MonoImGui();
-            Add(ImGui);
+            Add(ImGui); // Load dependencies
             ImGui.Add(new ImGuiDebugger());
-            
+            Remove(ImGui); // Remove from children.
+
             /*
             Text = new Text2D("Hello World!") {Size = 16};
             Add(Text);
@@ -45,7 +47,20 @@ namespace Acryl
                 .Easing(EasingFunctions.BounceOut);
             */
 
-            SwitchScene(new StartupScene());
+            //SwitchScene(new StartupScene());
+            SwitchScene(new GameplayScene());
+        }
+
+        protected override void Draw(GameTime gameTime)
+        {
+            base.Draw(gameTime);
+            
+            SpriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.NonPremultiplied);
+            
+            ImGui?.UpdateFrame(gameTime); // Always draw ImGui on top of Everything!
+            ImGui?.DrawFrame(SpriteBatch, gameTime);
+
+            SpriteBatch.End();
         }
     }
 }

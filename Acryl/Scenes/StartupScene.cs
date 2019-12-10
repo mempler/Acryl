@@ -83,7 +83,6 @@ namespace Acryl.Scenes
                         .MoveTo(new Vector2(-5000, 0), 32, 2)
                         .Easing(EasingFunctions.SineInOut);
                 });
-            
         }
     }
 }

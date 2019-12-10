@@ -41,13 +41,14 @@ namespace Acryl.Engine
         public Tween SwitchScene(Scene scene, float delay = 0)
         {
             return
-                ActiveScene.SwitchTo(scene, delay)
-                .OnEnd(s =>
-                {
-                    Remove(ActiveScene);
-                    ActiveScene = scene;
-                    Add(scene);
-                });
+                ActiveScene
+                    .SwitchTo(scene, delay)
+                    .OnEnd(s =>
+                    {
+                        Remove(ActiveScene);
+                        ActiveScene = scene;
+                        Add(scene);
+                    });
         }
 
         protected override void Initialize()
@@ -75,6 +76,7 @@ namespace Acryl.Engine
                 }
             ));
             Dependencies.Add(new FileResourceStore());
+            Dependencies.Add(new OnlineStore());
 
             Dependencies.Add(new Library());
             
@@ -104,7 +106,7 @@ namespace Acryl.Engine
         {
             GraphicsDevice.Clear(Color.Transparent);
             
-            SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
+            SpriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.NonPremultiplied);
             
             lock (Children)
                 foreach (var child in Children.ToList())
