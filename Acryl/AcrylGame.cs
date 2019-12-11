@@ -38,11 +38,11 @@ namespace Acryl
             Add(ActiveScene);
 
             SwitchScene(new GameplayScene(), 2, 4);
-#endif
-            
+#else
             Remove(ActiveScene);
             ActiveScene = new GameplayScene();
             Add(ActiveScene);
+#endif
 
         }
 
