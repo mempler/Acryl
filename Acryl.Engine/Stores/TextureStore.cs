@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -28,10 +29,10 @@ namespace Acryl.Engine.Stores
         {
             if (_cachedTextures.TryGetValue(key, out var t))
                 return t;
-
+            
             Stream data;
             if (key.StartsWith("file://"))
-                data = FileStore.GetStream(key);
+                data = FileStore.GetStream(key.Replace("file://", ""));
             else if (key.StartsWith("http://") || key.StartsWith("https://"))
                 data = OnlineStore.GetStream(key);
             else

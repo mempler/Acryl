@@ -15,8 +15,8 @@ namespace Acryl.Engine.Graphics.ImGui
         {
             _renderer = new ImGuiRenderer(game);
             _renderer.RebuildFontAtlas();
-            _isLoaded = true;
             
+            _isLoaded = true;
             DrawChildren = false;
         }
 
@@ -31,10 +31,7 @@ namespace Acryl.Engine.Graphics.ImGui
                 foreach (var child in Children) // Draw inside ImGui's Batch.
                     child.DrawFrame(spriteBatch, gameTime);
 
-                
             _renderer.AfterLayout();
-            
-            base.Draw(spriteBatch, gameTime);
         }
     }
 }

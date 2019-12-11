@@ -2,7 +2,12 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <OutputType>Exe</OutputType>
+        <OutputType>WinExe</OutputType>
+        <StartupObject>Acryl.Program</StartupObject>
+        <ApplicationIcon />
+        <LangVersion>latest</LangVersion>
+        <PackageVersion>20190820</PackageVersion>
+        <AssemblyVersion>a0.0.1</AssemblyVersion>
     </PropertyGroup>
 
     <ItemGroup>
@@ -11,6 +16,10 @@
 
     <ItemGroup>
         <EmbeddedResource Include="Resources\**\*" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Gameplay" />
     </ItemGroup>
     
 </Project>

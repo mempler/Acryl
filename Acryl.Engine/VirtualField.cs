@@ -17,7 +17,12 @@ namespace Acryl
 
         public Vector2 ApplyPosition(Vector2 original)
         {
-            throw new NotImplementedException();
+            var adjustedX = Width / Height;
+            
+            var newValueX = original.X * adjustedX / Height + (Width - adjustedX) / 2f;
+            var newValueY = original.Y * Height / Height;
+            
+            return new Vector2(newValueX, newValueY);
         }
 
         public Vector2 ApplyScale(Texture2D original)

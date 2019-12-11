@@ -78,7 +78,7 @@ namespace Acryl.Engine.Graphics
             if (Invalidated)
             {
                 Device.SetRenderTarget(_renderTarget2D);
-                _customBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, effect: Effect);
+                _customBatch.Begin(SpriteSortMode.FrontToBack, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, Effect);
                 _customBatch.GraphicsDevice.Clear(Color.Transparent);
             
                 lock(Children)

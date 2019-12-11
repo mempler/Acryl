@@ -158,7 +158,7 @@ namespace Acryl.Engine
     [AttributeUsage(AttributeTargets.Method)]
     [MeansImplicitUse]
     public class LoadAsyncAttribute : Attribute { }
-    internal static class AsyncLoadingPipeline
+    public static class AsyncLoadingPipeline
     {
         internal static Task LoadForObject(DependencyContainer obj)
             => LoadForObject(obj, obj);

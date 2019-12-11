@@ -102,9 +102,18 @@ namespace Acryl.Engine.Graphics.Core
                     positionOffset.X = (Field.Width-originScale.X) / 2f;
             }
 
-            var realColor = new Color(Color, Math.Min(alpha, 1f));
-            var realPos = Position + PositionOffset + positionOffset + (Parent?.Position ?? Vector2.Zero) +
-                           (Parent?.PositionOffset ?? Vector2.Zero);
+            var col = Color;
+            if (Parent?.Color != null)
+                col = Color.Lerp(Color, Parent.Color, 1); // inherit Parent Colors.
+            
+            var realColor = new Color(col, Math.Min(alpha, 1f));
+            var tmpPos = Position + PositionOffset + positionOffset + (Parent?.Position ?? Vector2.Zero) +
+                         (Parent?.PositionOffset ?? Vector2.Zero);
+            
+            var realPos = new Vector2(
+                (int) Math.Round(tmpPos.X, MidpointRounding.AwayFromZero), // <------
+                (int) Math.Round(tmpPos.Y, MidpointRounding.AwayFromZero));
+            
             var realRotation = (Rotation + (Parent?.Rotation ?? 0)) / ((float)Math.PI * 2);
             var realScale = Scale * (Parent?.Scale ?? Vector2.One);
             

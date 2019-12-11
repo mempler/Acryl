@@ -61,10 +61,10 @@ namespace Acryl.Engine
 
         protected override void Initialize()
         {
-            GraphicsDevice.BlendState = BlendState.Opaque;
+            GraphicsDevice.BlendState = BlendState.NonPremultiplied;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             GraphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
-            GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
+            GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
 
             base.Initialize();
         }
@@ -117,7 +117,7 @@ namespace Acryl.Engine
         {
             GraphicsDevice.Clear(Color.Transparent);
             
-            SpriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.NonPremultiplied);
+            SpriteBatch.Begin();
             
             lock (Children)
                 foreach (var child in Children.ToList())

@@ -51,7 +51,7 @@ namespace Acryl.Engine.Graphics.ImGui
 
             _loadedTextures = new Dictionary<IntPtr, Texture2D>();
 
-            _rasterizerState = new RasterizerState()
+            _rasterizerState = new RasterizerState
             {
                 CullMode = CullMode.None,
                 DepthBias = 0,
@@ -77,7 +77,7 @@ namespace Acryl.Engine.Graphics.ImGui
 
             // Copy the data to a managed array
             var pixels = new byte[width * height * bytesPerPixel];
-            unsafe { Marshal.Copy(new IntPtr(pixelData), pixels, 0, pixels.Length); }
+            Marshal.Copy(new IntPtr(pixelData), pixels, 0, pixels.Length);
 
             // Create and register the texture as an XNA texture
             var tex2d = new Texture2D(_graphicsDevice, width, height, false, SurfaceFormat.Color);
@@ -193,16 +193,16 @@ namespace Acryl.Engine.Graphics.ImGui
         /// </summary>
         private Effect UpdateEffect(Texture2D texture)
         {
-            _effect = _effect ?? new BasicEffect(_graphicsDevice);
+            _effect ??= new BasicEffect(_graphicsDevice);
 
             var io = ImGuiNET.ImGui.GetIO();
 
             // MonoGame-specific //////////////////////
-            var offset = .5f;
+            //var offset = .5f;
             ///////////////////////////////////////////
 
             // FNA-specific ///////////////////////////
-            //var offset = 0f;
+            var offset = 0f;
             ///////////////////////////////////////////
 
             _effect.World = Matrix.Identity;
@@ -224,10 +224,10 @@ namespace Acryl.Engine.Graphics.ImGui
 
             var mouse = Mouse.GetState();
             var keyboard = Keyboard.GetState();
-
-            for (var i = 0; i < _keys.Count; i++)
+            
+            foreach (var key in _keys)
             {
-                io.KeysDown[_keys[i]] = keyboard.IsKeyDown((Keys)_keys[i]);
+                io.KeysDown[key] = keyboard.IsKeyDown((Keys)key);
             }
 
             io.KeyShift = keyboard.IsKeyDown(Keys.LeftShift) || keyboard.IsKeyDown(Keys.RightShift);
