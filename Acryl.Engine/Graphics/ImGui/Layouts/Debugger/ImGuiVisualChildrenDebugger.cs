@@ -107,13 +107,12 @@ namespace Acryl.Engine.Graphics.ImGui.Layouts.Debugger
         
         public void Draw(GameBase game, ImGuiRenderer renderer)
         {
-            if (!ImGui.CollapsingHeader("Children"))
-                return;
-            
+            ImGui.Begin("Children Debugger");
             lock (game.Children)
             {
                 DrawFromParent(renderer, game);
             }
+            ImGui.End();
         }
     }
 }

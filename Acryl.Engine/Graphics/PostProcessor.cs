@@ -15,6 +15,8 @@ namespace Acryl.Engine.Graphics
         private GameBase Game { get; set; }
         
         private RenderTarget2D _ppTarget2D;
+
+        public bool DrawToScreen { get; set; } = true;
         
         [LoadAsync]
         private void Load()
@@ -46,6 +48,9 @@ namespace Acryl.Engine.Graphics
             RenderTexture = _ppTarget2D;
             
             Device.SetRenderTarget(null);
+            if (!DrawToScreen)
+                return;
+            
             spriteBatch.Begin(effect: Effect);
             var (color, destRect, rotation, origin) = CalculateFrame(Field.Width, Field.Height);
             

@@ -14,6 +14,13 @@
     </ItemGroup>
 
     <ItemGroup>
+        <EmbeddedResource Include="Icon.bmp">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Icon.ico">
+          <LogicalName>Icon.ico</LogicalName>
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
         <EmbeddedResource Include="Resources\**\*" />
     </ItemGroup>
 
