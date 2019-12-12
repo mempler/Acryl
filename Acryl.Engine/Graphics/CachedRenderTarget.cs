@@ -68,7 +68,7 @@ namespace Acryl.Engine.Graphics
             _hasLoaded = true;
         }
         
-        private Texture2D _cachedTexture;
+        public Texture2D CachedTexture { get; private set; }
         protected override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             DrawChildren = false;
@@ -88,19 +88,19 @@ namespace Acryl.Engine.Graphics
                 _customBatch.End();
                 Device.SetRenderTarget(null);
             
-                _cachedTexture =
+                CachedTexture =
                     Blur ?
                         _blur.PerformGaussianBlur(_renderTarget2D) :
                         _renderTarget2D;
                 
-                Size = new Vector2(_cachedTexture.Width, _cachedTexture.Height);
+                Size = new Vector2(CachedTexture.Width, CachedTexture.Height);
                 
                 Invalidated = false;
             }
             
             var (color, destRect, rotation, origin) = CalculateFrame(Field.Width, Field.Height);
             
-            spriteBatch.Draw(_cachedTexture,
+            spriteBatch.Draw(CachedTexture,
                 destRect,
                 null,
                 color,

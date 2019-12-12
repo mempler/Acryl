@@ -44,6 +44,8 @@ namespace Acryl.Engine.Graphics.Core
         
         protected Tweener Tweener { get; } = new Tweener();
 
+        internal IntPtr ImTex { get; set; }
+
         public (Color color, Rectangle destRect, float rotation, Vector2 origin) CalculateFrame(float width, float height)
         {
             var alpha = Alpha * (Parent?.Alpha ?? 1f);

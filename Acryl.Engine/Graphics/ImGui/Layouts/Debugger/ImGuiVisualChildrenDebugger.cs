@@ -35,7 +35,7 @@ namespace Acryl.Engine.Graphics.ImGui.Layouts.Debugger
                     foreach (var prop in childProps)
                     {
                         if (prop.Name == "Children" || prop.Name == "Parent" || prop.Name == "Child" || prop.Name == "RootParent"
-                            || prop.Name == "IsRootParent")
+                            || prop.Name == "IsRootParent" || prop.Name == "ImTex" )
                             continue;
 
                         if (prop.PropertyType == typeof(Color))
@@ -51,15 +51,30 @@ namespace Acryl.Engine.Graphics.ImGui.Layouts.Debugger
                         if (prop.PropertyType == typeof(Texture2D))
                         {
                             var vTex = (Texture2D) prop.GetValue(child);
-                            var iTex = renderer.BindTexture(vTex); // Unbind and Rebinding them is slow, TODO: cache!
+
+                            if ((int) child.ImTex <= 0)
+                                child.ImTex = renderer.BindTexture(vTex);
                             
                             ImGui.TextUnformatted($"{prop.Name}:"); ImGui.SameLine(150);
-                            ImGui.Image(iTex, new System.Numerics.Vector2(300, 150), 
+                            ImGui.Image(child.ImTex, new System.Numerics.Vector2(300, 150), 
                                 System.Numerics.Vector2.Zero, System.Numerics.Vector2.One,
                                 System.Numerics.Vector4.One, System.Numerics.Vector4.One);
                             
                             //renderer.UnbindTexture(iTex);
                             continue;
+                        }
+
+                        if (prop.PropertyType == typeof(RenderTarget2D))
+                        {
+                            var vTarget = (RenderTarget2D) prop.GetValue(child);
+
+                             if ((int) child.ImTex <= 0)
+                                child.ImTex = renderer.BindTexture(vTarget);
+
+                            ImGui.TextUnformatted($"{prop.Name}:"); ImGui.SameLine(150);
+                            ImGui.Image(child.ImTex, new System.Numerics.Vector2(300, 150), 
+                                System.Numerics.Vector2.Zero, System.Numerics.Vector2.One,
+                                System.Numerics.Vector4.One, System.Numerics.Vector4.One);
                         }
                         
                         ImGui.TextUnformatted($"{prop.Name}:"); ImGui.SameLine(150);
