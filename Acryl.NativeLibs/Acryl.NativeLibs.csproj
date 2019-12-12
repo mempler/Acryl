@@ -6,7 +6,7 @@
         <AssemblyTitle>Acryl Libraries</AssemblyTitle>
         <AssemblyName>ACryl.NativeLibs</AssemblyName>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <PackageVersion>1.0.4</PackageVersion>
+        <PackageVersion>1.0.5</PackageVersion>
     </PropertyGroup>
 
     <PropertyGroup Label="Nuget">

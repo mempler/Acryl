@@ -24,6 +24,9 @@ namespace Acryl.Engine
         protected Scene ActiveScene { get; set; } = new Scene(); // Empty Scene
         protected GraphicsDeviceManager GraphicsDeviceManager { get; }
         
+        protected PostProcessor PostProcessor { get; set; }
+        protected bool PostProcessing { get; set; } = true;
+        
         private Tweener sceneTweener = new Tweener();
 
         public GameBase()
@@ -68,6 +71,7 @@ namespace Acryl.Engine
 
             base.Initialize();
         }
+        
         protected override async void LoadContent()
         {
             Dependencies.Add(new VirtualField(1280, 720)); // 720p field
@@ -92,8 +96,16 @@ namespace Acryl.Engine
             Dependencies.Add(new TextureStore());
             Dependencies.Add(new EffectStore());
 
-            Add(ActiveScene);
+            Dependencies.Add(PostProcessor = new PostProcessor());
             
+            Add(ActiveScene);
+            Add(PostProcessor);
+            Remove(PostProcessor);
+            
+            PostProcessor.Size = new Vector2(
+                GraphicsDevice.PresentationParameters.BackBufferWidth,
+                GraphicsDevice.PresentationParameters.BackBufferHeight);
+
             await AsyncLoadingPipeline.LoadForObject(GetType(), this, Dependencies);
         }
         protected override void Update(GameTime gameTime)
@@ -104,6 +116,7 @@ namespace Acryl.Engine
             
             sceneTweener.Update((float) gameTime.ElapsedGameTime.TotalSeconds);
             
+            
             lock (Children)
                 foreach (var child in Children.ToList())
                 {
@@ -112,18 +125,24 @@ namespace Acryl.Engine
             
             Discord?.RunCallbacks();
         }
+        
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Transparent);
             
-            SpriteBatch.Begin();
+            if (PostProcessing)
+                PostProcessor.DrawFrame(SpriteBatch, gameTime);
+            else
+            {
+                SpriteBatch.Begin();
             
-            lock (Children)
-                foreach (var child in Children.ToList())
-                    child.DrawFrame(SpriteBatch, gameTime);
+                lock (Children)
+                    foreach (var child in Children.ToList())
+                        child.DrawFrame(SpriteBatch, gameTime);
+                   
+                SpriteBatch.End(); 
+            }
 
-            SpriteBatch.End();
-            
             base.Draw(gameTime);
         }
 
@@ -146,7 +165,7 @@ namespace Acryl.Engine
             }
         }
 
-        public Drawable Parent => null;
+        public Drawable Parent { get; internal set; }
         public object ResolveDependency(Type t, string hint = "", bool skipRootCheck = false)
             => Dependencies.ResolveDependency(t, hint, skipRootCheck);
 

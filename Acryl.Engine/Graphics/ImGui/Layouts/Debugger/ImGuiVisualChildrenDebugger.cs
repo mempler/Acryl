@@ -11,7 +11,7 @@ namespace Acryl.Engine.Graphics.ImGui.Layouts.Debugger
     
     public class ImGuiVisualChildrenDebugger
     {
-        private void DrawFromParent(GameBase game, ImGuiRenderer renderer, IChildrenContainer<Drawable> parent)
+        private void DrawFromParent(ImGuiRenderer renderer, IChildrenContainer<Drawable> parent)
         {
             var childContainerListType = typeof(List<Drawable>);
             
@@ -97,7 +97,7 @@ namespace Acryl.Engine.Graphics.ImGui.Layouts.Debugger
                     
                     if (childContainerListType.IsAssignableFrom(prop.PropertyType))
                     {
-                        DrawFromParent(game, renderer, child);
+                        DrawFromParent(renderer, child);
                     }
                 }
 
@@ -112,7 +112,7 @@ namespace Acryl.Engine.Graphics.ImGui.Layouts.Debugger
             
             lock (game.Children)
             {
-                DrawFromParent(game, renderer, game);
+                DrawFromParent(renderer, game);
             }
         }
     }

@@ -242,6 +242,8 @@ namespace Acryl.Engine.Graphics
             if (_effect == null)
                 throw new InvalidOperationException("GaussianBlur.fx effect not loaded.");
 
+            var oldTarget = (RenderTarget2D) Device.GetRenderTargets()[0].RenderTarget;
+
             var renderTargetWidth = srcTexture.Width;
             var renderTargetHeight = srcTexture.Height;
 
@@ -285,7 +287,7 @@ namespace Acryl.Engine.Graphics
 
             // Return the Gaussian blurred texture.
 
-            Device.SetRenderTarget(null);
+            Device.SetRenderTarget(oldTarget);
             outputTexture = renderTarget2;
 
             renderTarget1.Dispose();

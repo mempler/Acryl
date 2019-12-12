@@ -90,13 +90,14 @@ namespace Acryl.Engine
                 if (skipRootCheck && IsRootParent)
                     return null; // No stack overflow >:c
                 
-                Console.WriteLine($"Container: {GetType()}\t\t R: {t} D: {dependency.GetType().Name}\t\t\t H: {hint}\t\t RH: {rHint}\t\t S: {skipRootCheck}");
-                if (dependency is IDependencyContainer container)
-                {
-                    object correctDep;
-                    if ((correctDep = container.ResolveDependency(t, hint, true)) != null) // Maybe our Dep is in one of the Children
-                        return correctDep;
-                }
+                // I'll keep this here, just in case.
+                //Console.WriteLine($"Container: {GetType()}\t\t R: {t} D: {dependency.GetType().Name}\t\t\t H: {hint}\t\t RH: {rHint}\t\t S: {skipRootCheck}");
+                if (!(dependency is IDependencyContainer container))
+                    continue;
+                
+                object correctDep;
+                if ((correctDep = container.ResolveDependency(t, hint, true)) != null) // Maybe our Dep is in one of the Children
+                    return correctDep;
             }
 
             return null; // Still not found ? screw it, lets return null!
