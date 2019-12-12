@@ -25,7 +25,11 @@ namespace Acryl.Engine.Graphics.Core
         
         public Origin Origin { get; set; } = Origin.Top | Origin.Left;
         public Origin PositionOrigin { get; set; } = Origin.Top | Origin.Left;
+
+        internal bool HasTmpAltered = false;
+        internal Color TmpColor = Color.White;
         
+        public Vector2 Size { get; set; } = Vector2.Zero;
         public Vector2 Scale { get; set; } = Vector2.One;
         public float Rotation { get; set; } = 0;
         public float Alpha = 1f; // between 0 and 1
@@ -40,7 +44,7 @@ namespace Acryl.Engine.Graphics.Core
         
         protected Tweener Tweener { get; } = new Tweener();
 
-        public (Color color, Vector2 pos, float rotation, Vector2 scale, Vector2 origin) CalculateFrame(float width, float height)
+        public (Color color, Rectangle destRect, float rotation, Vector2 origin) CalculateFrame(float width, float height)
         {
             var alpha = Alpha * (Parent?.Alpha ?? 1f);
             
@@ -103,21 +107,29 @@ namespace Acryl.Engine.Graphics.Core
             }
 
             var col = Color;
-            if (Parent?.Color != null)
+            if (Parent?.Color != null && !HasTmpAltered)
                 col = Color.Lerp(Color, Parent.Color, 1); // inherit Parent Colors.
+            else if (HasTmpAltered)
+                col = TmpColor;
             
             var realColor = new Color(col, Math.Min(alpha, 1f));
             var tmpPos = Position + PositionOffset + positionOffset + (Parent?.Position ?? Vector2.Zero) +
                          (Parent?.PositionOffset ?? Vector2.Zero);
             
             var realPos = new Vector2(
-                (int) Math.Round(tmpPos.X, MidpointRounding.AwayFromZero), // <------
-                (int) Math.Round(tmpPos.Y, MidpointRounding.AwayFromZero));
+                MathF.Round(tmpPos.X, MidpointRounding.AwayFromZero), // <------
+                MathF.Round(tmpPos.Y, MidpointRounding.AwayFromZero));
             
             var realRotation = (Rotation + (Parent?.Rotation ?? 0)) / ((float)Math.PI * 2);
             var realScale = Scale * (Parent?.Scale ?? Vector2.One);
+            var size = Size + (Parent?.Size ?? Vector2.Zero);
+
+            var destRect = new Rectangle(
+                (int) realPos.X, (int) realPos.Y,
+                (int) MathF.Round(size.X * realScale.X, MidpointRounding.AwayFromZero),
+                (int) MathF.Round(size.Y * realScale.Y, MidpointRounding.AwayFromZero));
             
-            return (realColor, realPos, realRotation, realScale, origin);
+            return (realColor, destRect, realRotation, origin);
         }
 
         public void DrawFrame(SpriteBatch spriteBatch, GameTime gameTime)

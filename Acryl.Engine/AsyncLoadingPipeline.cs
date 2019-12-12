@@ -25,7 +25,7 @@ namespace Acryl.Engine
     public interface IDependencyContainer
     {
         IDependencyContainer Parent { get;  }
-        object ResolveDependency(Type t, string hint = "", bool check = true);
+        object ResolveDependency(Type t, string hint = "", bool skipRootCheck = false);
     }
     
     public class DependencyContainer : IDependencyContainer
@@ -74,25 +74,29 @@ namespace Acryl.Engine
             _dependencies.Add((typeof(T), hint, dependency));
         }
 
-        public object ResolveDependency(Type t, string hint = "", bool check = false)
+        public object ResolveDependency(Type t, string hint = "", bool skipRootCheck = false)
         {
-            if (!IsRootParent && !check)
-                return RootParent?.ResolveDependency(t, hint, true);
+            if (!IsRootParent && !skipRootCheck)
+                return RootParent?.ResolveDependency(t, hint);
             
             foreach (var (depType, rHint, dependency) in _dependencies.Where(dep => dep.dependency != null))
             {
-                if (typeof(DependencyContainer).IsSubclassOf(dependency.GetType()))
-                {
-                    object correctDep;
-                    if ((correctDep = ((DependencyContainer) dependency).ResolveDependency(t, hint)) != null) // Maybe our Dep is in one of the Children
-                        return correctDep;
-                }
-                
-                if (t == depType && rHint.Contains(hint, StringComparison.CurrentCultureIgnoreCase)) // Not in one our children ? well, lets check our own Dictionary.
+                if (t == depType && rHint.Contains(hint, StringComparison.CurrentCultureIgnoreCase))
                     return dependency;
 
                 if (t == depType)
                     return dependency;
+
+                if (skipRootCheck && IsRootParent)
+                    return null; // No stack overflow >:c
+                
+                Console.WriteLine($"Container: {GetType()}\t\t R: {t} D: {dependency.GetType().Name}\t\t\t H: {hint}\t\t RH: {rHint}\t\t S: {skipRootCheck}");
+                if (dependency is IDependencyContainer container)
+                {
+                    object correctDep;
+                    if ((correctDep = container.ResolveDependency(t, hint, true)) != null) // Maybe our Dep is in one of the Children
+                        return correctDep;
+                }
             }
 
             return null; // Still not found ? screw it, lets return null!

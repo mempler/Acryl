@@ -1,38 +1,44 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.Sprites;
 
 namespace Acryl.Engine.Graphics.Core
 {
     public class Sprite : Drawable, IDisposable
     {
-        public Vector2 Size => new Vector2(Texture.Width, Texture.Height);
-        
         public Sprite(Texture2D tex)
         {
             Texture = tex;
         }
-        
-        public Texture2D Texture { get; set; }
+
+        private Texture2D _tex;
+
+        public Texture2D Texture
+        {
+            get => _tex;
+            set
+            {
+                _tex = value;
+                Size = new Vector2(_tex.Width, _tex.Height);
+            }
+        }
         
         protected override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
             if (!Visible || Texture == null)
                 return;
-
-            var (color, pos, rotation, scale, origin) = CalculateFrame(Size.X, Size.Y);
             
-            spriteBatch.Draw(
-                Texture,
-                pos,
+            var (color, destRect, rotation, origin) = CalculateFrame(Field.Width, Field.Height);
+            
+            spriteBatch.Draw(Texture,
+                destRect,
                 null,
                 color,
                 rotation,
                 origin,
-                scale,
                 SpriteEffects.None,
-                0
-                );
+                0);
         }
 
         public override void Dispose(bool isDisposing)

@@ -6,15 +6,15 @@ namespace Acryl.Engine.Graphics.ImGui
 {
     public class MonoImGui : Drawable
     {
-        private ImGuiRenderer _renderer;
+        public ImGuiRenderer Renderer { get; private set; }
 
         private bool _isLoaded;
 
         [LoadAsync]
         private void Load(GraphicsDevice device, GameBase game)
         {
-            _renderer = new ImGuiRenderer(game);
-            _renderer.RebuildFontAtlas();
+            Renderer = new ImGuiRenderer(game);
+            Renderer.RebuildFontAtlas();
             
             _isLoaded = true;
             DrawChildren = false;
@@ -25,13 +25,13 @@ namespace Acryl.Engine.Graphics.ImGui
             if (!Visible || !_isLoaded)
                 return;
             
-            _renderer.BeforeLayout(gameTime);
+            Renderer.BeforeLayout(gameTime);
 
             lock(Children)
                 foreach (var child in Children) // Draw inside ImGui's Batch.
                     child.DrawFrame(spriteBatch, gameTime);
 
-            _renderer.AfterLayout();
+            Renderer.AfterLayout();
         }
     }
 }

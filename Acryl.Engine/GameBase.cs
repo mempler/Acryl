@@ -91,7 +91,6 @@ namespace Acryl.Engine
             Dependencies.Add(new FontFaceStore());
             Dependencies.Add(new TextureStore());
             Dependencies.Add(new EffectStore());
-            Dependencies.Add(Dependencies); // Add root DepContainer
 
             Add(ActiveScene);
             
@@ -148,7 +147,8 @@ namespace Acryl.Engine
         }
 
         public Drawable Parent => null;
-        public object ResolveDependency(Type t, string hint = "", bool check = true) => Dependencies;
+        public object ResolveDependency(Type t, string hint = "", bool skipRootCheck = false)
+            => Dependencies.ResolveDependency(t, hint, skipRootCheck);
 
         public async void Add(Drawable child)
         {
@@ -162,6 +162,8 @@ namespace Acryl.Engine
 
             lock (Children)
                 Children.Add(child);
+            
+            Dependencies.Add(child);
         }
 
         public void Remove(Drawable child)

@@ -1,7 +1,9 @@
-using System;
 using System.Collections.Generic;
 using Acryl.Engine.Graphics.Core;
 using Acryl.Engine.Utility;
+using ImGuiNET;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Acryl.Engine.Graphics.ImGui.Layouts.Debugger
 {
@@ -9,56 +11,93 @@ namespace Acryl.Engine.Graphics.ImGui.Layouts.Debugger
     
     public class ImGuiVisualChildrenDebugger
     {
-
-        private void DrawFromParent(IChildrenContainer<Drawable> parent, int xz = 0)
+        private void DrawFromParent(GameBase game, ImGuiRenderer renderer, IChildrenContainer<Drawable> parent)
         {
-            var childContainerType = typeof(IChildrenContainer<Drawable>);
-            var childContainerListType = typeof(List<IChildrenContainer<Drawable>>);
+            var childContainerListType = typeof(List<Drawable>);
             
             foreach (var child in parent.Children)
             {
                 var childType = child.GetType();
-                if (!ImGui.TreeNode(childType.Name))
-                    continue;
-                    
-                ImGui.Indent();
                 var childProps = childType.GetProperties();
 
-                const float itemWidth = 200f;
-                //ImGui.PushItemWidth(itemWidth);
-                    
-                ImGui.Columns(2, xz.ToString(), false);
-                var x = 0;
-                foreach (var prop in childProps)
+                if (!ImGui.TreeNode(childType.Name))
+                    continue;
+                
+                if (ImGui.IsItemHovered())
                 {
-                    var propStr = $"{x++ + xz} {prop.Name}: {prop.GetValue(child)}";
+                    if (!child.HasTmpAltered) {
+                        child.TmpColor = Color.HotPink;
+                        child.HasTmpAltered = true;
+                    }
+                    ImGui.BeginTooltip();
 
-                    if (prop.Name == "Child")
+                    ImGui.PushTextWrapPos(ImGui.GetFontSize() * 35.0f);
+                    foreach (var prop in childProps)
+                    {
+                        if (prop.Name == "Children" || prop.Name == "Parent" || prop.Name == "Child" || prop.Name == "RootParent"
+                            || prop.Name == "IsRootParent")
+                            continue;
+
+                        if (prop.PropertyType == typeof(Color))
+                        {
+                            var vCol = (Color) prop.GetValue(child);
+                            var vec = ImGui.ColorConvertU32ToFloat4(vCol.PackedValue);
+                            
+                            ImGui.TextUnformatted($"{prop.Name}:"); ImGui.SameLine(150);
+                            ImGui.ColorEdit4(prop.Name, ref vec, ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.NoLabel);
+                            continue;
+                        }
+                        
+                        if (prop.PropertyType == typeof(Texture2D))
+                        {
+                            var vTex = (Texture2D) prop.GetValue(child);
+                            var iTex = renderer.BindTexture(vTex); // Unbind and Rebinding them is slow, TODO: cache!
+                            
+                            ImGui.TextUnformatted($"{prop.Name}:"); ImGui.SameLine(150);
+                            ImGui.Image(iTex, new System.Numerics.Vector2(300, 150), 
+                                System.Numerics.Vector2.Zero, System.Numerics.Vector2.One,
+                                System.Numerics.Vector4.One, System.Numerics.Vector4.One);
+                            
+                            //renderer.UnbindTexture(iTex);
+                            continue;
+                        }
+                        
+                        ImGui.TextUnformatted($"{prop.Name}:"); ImGui.SameLine(150);
+                        ImGui.TextUnformatted($"{prop.GetValue(child)}");
+                    }
+                    ImGui.PopTextWrapPos();
+                    
+                    ImGui.EndTooltip();
+                }
+                else
+                {
+                    child.TmpColor = Color.White;
+                    child.HasTmpAltered = false;
+                }
+
+                foreach (var prop in childProps)
+                { 
+                    if (prop.Name != "Children")
                         continue;
                     
-                    if (childContainerType.IsAssignableFrom(prop.PropertyType))
+                    if (childContainerListType.IsAssignableFrom(prop.PropertyType))
                     {
-                        DrawFromParent(child, xz++);
-                        ImGui.NextColumn();
+                        DrawFromParent(game, renderer, child);
                     }
-                    
-                    ImGui.Text(prop.Name);
-                    ImGui.NextColumn();
-                    ImGui.Text($"{prop.GetValue(child)}");
                 }
-                            
+
                 ImGui.TreePop();
             }
         }
         
-        public void Draw(GameBase game)
+        public void Draw(GameBase game, ImGuiRenderer renderer)
         {
             if (!ImGui.CollapsingHeader("Children"))
                 return;
             
             lock (game.Children)
             {
-                DrawFromParent(game);
+                DrawFromParent(game, renderer, game);
             }
         }
     }

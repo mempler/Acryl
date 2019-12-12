@@ -55,8 +55,8 @@ namespace Acryl.Engine.Graphics
             
             _renderTarget2D = new RenderTarget2D(
                 Device,
-                Device.PresentationParameters.BackBufferWidth,
-                Device.PresentationParameters.BackBufferHeight,
+                (int) Field.Width,
+                (int) Field.Height,
                 false,
                 Device.PresentationParameters.BackBufferFormat,
                 DepthFormat.None,
@@ -92,24 +92,23 @@ namespace Acryl.Engine.Graphics
                     Blur ?
                         _blur.PerformGaussianBlur(_renderTarget2D) :
                         _renderTarget2D;
-
+                
+                Size = new Vector2(_cachedTexture.Width, _cachedTexture.Height);
+                
                 Invalidated = false;
             }
-
-
-            var (color, pos, rotation, scale, origin) = CalculateFrame(Field.Width, Field.Height);
             
-            spriteBatch.Draw(
-                _cachedTexture,
-                pos,
+            var (color, destRect, rotation, origin) = CalculateFrame(Field.Width, Field.Height);
+            
+            spriteBatch.Draw(_cachedTexture,
+                destRect,
                 null,
                 color,
                 rotation,
                 origin,
-                scale,
                 SpriteEffects.None,
-                0
-            );
+                0);
+            
         }
     }
 }

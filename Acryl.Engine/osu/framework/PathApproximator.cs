@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
-namespace Acryl.Extension.osu.framework
+namespace Acryl.Engine.osu.framework
 {
     /// <summary>
     /// Helper methods to approximate a path by interpolating a sequence of control points.

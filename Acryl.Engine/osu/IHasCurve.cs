@@ -9,10 +9,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Acryl.Extension.osu.framework;
+using Acryl.Engine.osu.framework;
 using Microsoft.Xna.Framework;
 
-namespace Acryl.osu
+namespace Acryl.Engine.osu
 {
     public enum PathType
     {

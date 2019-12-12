@@ -5,7 +5,7 @@
 using System;
 using Microsoft.Xna.Framework;
 
-namespace Acryl.Extension.osu.framework
+namespace Acryl.Engine.osu.framework
 {
     public static class Precision
     {

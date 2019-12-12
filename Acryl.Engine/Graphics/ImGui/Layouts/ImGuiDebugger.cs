@@ -10,6 +10,9 @@ namespace Acryl.Engine.Graphics.ImGui.Layouts
     {
         [DependencyResolved]
         private GameBase Game { get; set; }
+        
+        [DependencyResolved]
+        private MonoImGui MonoImGui { get; set; }
 
         private ImGuiVisualChildrenDebugger ChildrenDebugger
             = new ImGuiVisualChildrenDebugger();
@@ -23,7 +26,7 @@ namespace Acryl.Engine.Graphics.ImGui.Layouts
 
             ImGui.Text($"FPS: {Math.Round(ImGui.GetIO().Framerate, 2)}, {Math.Round(1000f / ImGui.GetIO().Framerate, 2)}");
             
-            ChildrenDebugger.Draw(Game);
+            ChildrenDebugger.Draw(Game, MonoImGui.Renderer);
             
             ImGui.End();
         }

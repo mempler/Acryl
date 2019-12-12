@@ -26,10 +26,12 @@ namespace Acryl
         private void Load(TextureStore store)
         {
             ImGui = new MonoImGui();
+            Dependencies.Add(ImGui);
+
             Add(ImGui); // Load dependencies
             ImGui.Add(new ImGuiDebugger());
             Remove(ImGui); // Remove from children.
-            Dependencies.Add(ImGui);
+            
             Dependencies.Add(new SkinManager());
 
 #if !DEBUG

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Acryl.Engine.Graphics.Font;
 using Acryl.Engine.Stores;
@@ -65,19 +66,18 @@ namespace Acryl.Engine.Graphics.Core
             float lastHeight = 0;
             foreach (var t in cachedTextures)
             {
-                var (color, pos, rotation, scale, origin) = CalculateFrame(t.Width, t.Height);
+                var (color, destRect, rotation, origin) = CalculateFrame(t.Width, t.Height);
+
+                destRect.Y += (int) MathF.Round(lastHeight, MidpointRounding.AwayFromZero);
                 
-                spriteBatch.Draw(
-                    t,
-                    pos += new Vector2(0, lastHeight),
+                spriteBatch.Draw(t,
+                    destRect,
                     null,
                     color,
                     rotation,
                     origin,
-                    scale,
                     SpriteEffects.None,
-                    0
-                );
+                    0);
                 
                 lastHeight += t.Height * 1.1f;
             }
