@@ -24,7 +24,7 @@ namespace Acryl.Engine.Graphics.Core
             set => _service.FontFace = value;
         }
 
-        public float Size
+        public new float Size
         {
             get;
             set;
@@ -47,8 +47,8 @@ namespace Acryl.Engine.Graphics.Core
             Text = text;
         }
 
-        private bool invalidated = true;
-        private Texture2D[] cachedTextures;
+        private bool _invalidated = true;
+        private Texture2D[] _cachedTextures;
         protected override void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         { 
             if (!Visible || !_isLoaded)
@@ -59,23 +59,23 @@ namespace Acryl.Engine.Graphics.Core
 
             var s = Text.Split("\n");
 
-            if (invalidated)
-                cachedTextures = s.Select(t => _service.RenderString(t, System.Drawing.Color.White, System.Drawing.Color.Transparent)).ToArray();
-            invalidated = false;
+            if (_invalidated)
+                _cachedTextures = s.Select(t => _service.RenderString(t, System.Drawing.Color.White, System.Drawing.Color.Transparent)).ToArray();
+            _invalidated = false;
             
             float lastHeight = 0;
-            foreach (var t in cachedTextures)
+            foreach (var t in _cachedTextures)
             {
                 var (color, destRect, rotation, origin) = CalculateFrame(t.Width, t.Height);
 
                 destRect.Y += (int) MathF.Round(lastHeight, MidpointRounding.AwayFromZero);
                 
                 spriteBatch.Draw(t,
-                    destRect,
+                    new Rectangle(destRect.X, destRect.Y, destRect.Width, destRect.Height), 
                     null,
-                    color,
+                    new Color((uint) color.ToArgb()),
                     rotation,
-                    origin,
+                    new Vector2(origin.X, origin.Y), 
                     SpriteEffects.None,
                     0);
                 

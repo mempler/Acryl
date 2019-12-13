@@ -1,11 +1,11 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended.Sprites;
+using Vector2 = System.Numerics.Vector2;
 
 namespace Acryl.Engine.Graphics.Core
 {
-    public class Sprite : Drawable, IDisposable
+    public class Sprite : Drawable
     {
         public Sprite(Texture2D tex)
         {
@@ -31,12 +31,13 @@ namespace Acryl.Engine.Graphics.Core
             
             var (color, destRect, rotation, origin) = CalculateFrame(Field.Width, Field.Height);
             
+            
             spriteBatch.Draw(Texture,
-                destRect,
+                new Rectangle(destRect.X, destRect.Y, destRect.Width, destRect.Height), 
                 null,
-                color,
+                new Color((uint) color.ToArgb()),
                 rotation,
-                origin,
+                new Microsoft.Xna.Framework.Vector2(origin.X, origin.Y), 
                 SpriteEffects.None,
                 0);
         }

@@ -1,8 +1,12 @@
 using System;
+using Acryl.Engine.Graphics.Extension;
 using Acryl.Engine.Utility;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Tweening;
+using Color = System.Drawing.Color;
+using Rectangle = System.Drawing.Rectangle;
+using Vector2 = System.Numerics.Vector2;
 
 namespace Acryl.Engine.Graphics.Core
 {
@@ -21,7 +25,7 @@ namespace Acryl.Engine.Graphics.Core
     {
         public Vector2 Position { get; set; } = Vector2.Zero;
         public Vector2 PositionOffset { get; set; } = Vector2.Zero;
-        public Color Color { get; set; } = Color.White;
+        public Color Colour { get; set; } = Color.White;
         
         public Origin Origin { get; set; } = Origin.Top | Origin.Left;
         public Origin PositionOrigin { get; set; } = Origin.Top | Origin.Left;
@@ -108,13 +112,13 @@ namespace Acryl.Engine.Graphics.Core
                     positionOffset.X = (Field.Width-originScale.X) / 2f;
             }
 
-            var col = Color;
-            if (Parent?.Color != null && !HasTmpAltered)
-                col = Color.Lerp(Color, Parent.Color, 1); // inherit Parent Colors.
+            var col = Colour;
+            if (Parent?.Colour != null && !HasTmpAltered)
+                col = Colour.Lerp(Parent.Colour, 1); // inherit Parent Colors.
             else if (HasTmpAltered)
                 col = TmpColor;
-            
-            var realColor = new Color(col, Math.Min(alpha, 1f));
+
+            var realCol = Color.FromArgb((int) MathF.Round(Math.Min(alpha, 1f) * 255f), col);
             var tmpPos = Position + PositionOffset + positionOffset + (Parent?.Position ?? Vector2.Zero) +
                          (Parent?.PositionOffset ?? Vector2.Zero);
             
@@ -131,7 +135,7 @@ namespace Acryl.Engine.Graphics.Core
                 (int) MathF.Round(size.X * realScale.X, MidpointRounding.AwayFromZero),
                 (int) MathF.Round(size.Y * realScale.Y, MidpointRounding.AwayFromZero));
             
-            return (realColor, destRect, realRotation, origin);
+            return (realCol, destRect, realRotation, origin);
         }
 
         public void DrawFrame(SpriteBatch spriteBatch, GameTime gameTime)

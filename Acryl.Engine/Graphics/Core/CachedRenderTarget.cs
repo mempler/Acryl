@@ -1,8 +1,8 @@
-using Acryl.Engine.Graphics.Core;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Vector2 = System.Numerics.Vector2;
 
-namespace Acryl.Engine.Graphics
+namespace Acryl.Engine.Graphics.Core
 {
     public class CachedRenderTarget : Drawable
     {
@@ -79,7 +79,7 @@ namespace Acryl.Engine.Graphics
             {
                 Device.SetRenderTarget(_renderTarget2D);
                 _customBatch.Begin(SpriteSortMode.FrontToBack, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullCounterClockwise, Effect);
-                _customBatch.GraphicsDevice.Clear(Color.Transparent);
+                _customBatch.GraphicsDevice.Clear(Microsoft.Xna.Framework.Color.Transparent);
             
                 lock(Children)
                     foreach (var child in Children) // Iterate through Child and it's Children to draw a Frame
@@ -101,14 +101,13 @@ namespace Acryl.Engine.Graphics
             var (color, destRect, rotation, origin) = CalculateFrame(Field.Width, Field.Height);
             
             spriteBatch.Draw(CachedTexture,
-                destRect,
+                new Rectangle(destRect.X, destRect.Y, destRect.Width, destRect.Height), 
                 null,
-                color,
+                new Color((uint) color.ToArgb()),
                 rotation,
-                origin,
+                new Microsoft.Xna.Framework.Vector2(origin.X, origin.Y), 
                 SpriteEffects.None,
                 0);
-            
         }
     }
 }

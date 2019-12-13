@@ -1,8 +1,9 @@
+using System.Drawing;
+using System.Numerics;
 using Acryl.Engine;
 using Acryl.Engine.Graphics;
 using Acryl.Engine.Graphics.Core;
 using Acryl.Engine.Stores;
-using Microsoft.Xna.Framework;
 using MonoGame.Extended.Tweening;
 
 namespace Acryl.Scenes
@@ -31,7 +32,7 @@ namespace Acryl.Scenes
             Add(WarningHeader);
             Add(WarningBody);
             
-            WarningSprite.Color = Color.Yellow;
+            WarningSprite.Colour = Color.Yellow;
             WarningSprite.Scale = new Vector2(.1f, .1f);
             WarningSprite.Origin = Origin.Center;
             WarningSprite.PositionOrigin = Origin.Center;
@@ -50,7 +51,7 @@ namespace Acryl.Scenes
                         .Easing(EasingFunctions.SineInOut);
                 });;
 
-            WarningHeader.Color = Color.Yellow;
+            WarningHeader.Colour = Color.Yellow;
             WarningHeader.Origin = Origin.Center;
             WarningHeader.PositionOrigin = Origin.Center;
             WarningHeader.PositionOffset += new Vector2(0, -25);

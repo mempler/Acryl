@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using Acryl.Engine.Graphics.Core;
 using Microsoft.Xna.Framework;
@@ -55,11 +54,11 @@ namespace Acryl.Engine.Graphics
             var (color, destRect, rotation, origin) = CalculateFrame(Field.Width, Field.Height);
             
             spriteBatch.Draw(RenderTexture,
-                destRect,
+                new Rectangle(destRect.X, destRect.Y, destRect.Width, destRect.Height), 
                 null,
-                color,
+                new Color((uint) color.ToArgb()),
                 rotation,
-                origin,
+                new Microsoft.Xna.Framework.Vector2(origin.X, origin.Y), 
                 SpriteEffects.None,
                 0);
             

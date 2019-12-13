@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using System.Drawing;
 using Acryl.Engine.Graphics.Core;
 using Acryl.Engine.Utility;
 using ImGuiNET;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+
 
 namespace Acryl.Engine.Graphics.ImGui.Layouts.Debugger
 {
@@ -41,7 +42,7 @@ namespace Acryl.Engine.Graphics.ImGui.Layouts.Debugger
                         if (prop.PropertyType == typeof(Color))
                         {
                             var vCol = (Color) prop.GetValue(child);
-                            var vec = ImGui.ColorConvertU32ToFloat4(vCol.PackedValue);
+                            var vec = ImGui.ColorConvertU32ToFloat4((uint) vCol.ToArgb());
                             
                             ImGui.TextUnformatted($"{prop.Name}:"); ImGui.SameLine(150);
                             ImGui.ColorEdit4(prop.Name, ref vec, ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.NoLabel);

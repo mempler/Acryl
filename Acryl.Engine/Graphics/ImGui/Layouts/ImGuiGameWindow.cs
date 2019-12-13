@@ -1,4 +1,3 @@
-using System;
 using ImGuiNET;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -22,7 +21,7 @@ namespace Acryl.Engine.Graphics.ImGui.Layouts
             ImGuiNET.ImGui.Begin("Game", ImGuiWindowFlags.HorizontalScrollbar);
             var wndSize = ImGuiNET.ImGui.GetWindowSize();
 
-            Size = new Microsoft.Xna.Framework.Vector2(wndSize.X, wndSize.Y);
+            Size = wndSize;
             var gSize = new Vector2(Field.Width, Field.Height);
             
             ImGuiNET.ImGui.Image(MonoImGui.PostProcessingId,

@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Tweening;
 using SharpFont;
+using Vector2 = System.Numerics.Vector2;
 
 namespace Acryl.Engine
 {
