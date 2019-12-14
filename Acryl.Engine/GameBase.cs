@@ -96,6 +96,7 @@ namespace Acryl.Engine
             Dependencies.Add(new FontFaceStore());
             Dependencies.Add(new TextureStore());
             Dependencies.Add(new EffectStore());
+            Dependencies.Add(Dependencies);
 
             Dependencies.Add(PostProcessor = new PostProcessor());
             

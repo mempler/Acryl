@@ -65,7 +65,7 @@ namespace Acryl.Engine
                 hint = dependency.GetType().Name;
             
             if (dependency is DependencyContainer container &&
-                this != dependency as DependencyContainer)
+                this != container)
             {
                 container.Parent = this;
                 DependencyInjector.InjectIntoObject(dependency, this);

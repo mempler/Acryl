@@ -27,9 +27,10 @@ namespace Acryl
         {
             ImGui = new MonoImGui();
             Dependencies.Add(ImGui);
+            //Dependencies.Add(ImGui.Renderer);
 
             Add(ImGui); // Load dependencies
-            ImGui.Add(new ImGuiDebugger());
+            ImGui.Add(new ImGuiDebugger()); // Attach Debugger
             Remove(ImGui); // Remove from children.
             
             Dependencies.Add(new SkinManager());

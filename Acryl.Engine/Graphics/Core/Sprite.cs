@@ -1,4 +1,3 @@
-using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Vector2 = System.Numerics.Vector2;
@@ -35,7 +34,7 @@ namespace Acryl.Engine.Graphics.Core
             spriteBatch.Draw(Texture,
                 new Rectangle(destRect.X, destRect.Y, destRect.Width, destRect.Height), 
                 null,
-                new Color((uint) color.ToArgb()),
+                new Color(color.R, color.G, color.B, color.A),
                 rotation,
                 new Microsoft.Xna.Framework.Vector2(origin.X, origin.Y), 
                 SpriteEffects.None,

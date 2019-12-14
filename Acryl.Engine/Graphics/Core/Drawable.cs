@@ -114,10 +114,10 @@ namespace Acryl.Engine.Graphics.Core
 
             var col = Colour;
             if (Parent?.Colour != null && !HasTmpAltered)
-                col = Colour.Lerp(Parent.Colour, 1); // inherit Parent Colors.
+                col = Colour; // inherit Parent Colors.
             else if (HasTmpAltered)
                 col = TmpColor;
-
+            
             var realCol = Color.FromArgb((int) MathF.Round(Math.Min(alpha, 1f) * 255f), col);
             var tmpPos = Position + PositionOffset + positionOffset + (Parent?.Position ?? Vector2.Zero) +
                          (Parent?.PositionOffset ?? Vector2.Zero);

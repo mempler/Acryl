@@ -40,5 +40,21 @@ namespace Acryl.Engine.Graphics.Extension
             var tex = device.GetTexture2DFromBitmap(btm);
             return tex;
         }
+
+        public static Texture2D CreateQuad(this GraphicsDevice device, int w, int h, Color col)
+        {
+            if (w == 0 && h == 0)
+                return null;
+            
+            var t = new Texture2D(device, w, h);
+
+            var data = new Microsoft.Xna.Framework.Color[w*h];
+            for(var pixel=0;pixel<data.Length;pixel++)
+                data[pixel] = new Microsoft.Xna.Framework.Color((uint) col.ToArgb());
+
+            t.SetData(data);
+
+            return t;
+        }
     }
 }

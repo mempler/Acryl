@@ -3,7 +3,6 @@ using Acryl.Engine.Graphics;
 using Acryl.Engine.Graphics.Core;
 using Acryl.Engine.Graphics.ImGui;
 using Acryl.Engine.Stores;
-using Microsoft.Xna.Framework;
 
 namespace Acryl.Scenes
 {

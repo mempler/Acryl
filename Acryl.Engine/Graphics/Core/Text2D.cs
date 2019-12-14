@@ -69,11 +69,11 @@ namespace Acryl.Engine.Graphics.Core
                 var (color, destRect, rotation, origin) = CalculateFrame(t.Width, t.Height);
 
                 destRect.Y += (int) MathF.Round(lastHeight, MidpointRounding.AwayFromZero);
-                
+  
                 spriteBatch.Draw(t,
-                    new Rectangle(destRect.X, destRect.Y, destRect.Width, destRect.Height), 
+                    new Rectangle(destRect.X, destRect.Y, t.Width, t.Height), 
                     null,
-                    new Color((uint) color.ToArgb()),
+                    new Color(color.R, color.G, color.B, color.A),
                     rotation,
                     new Vector2(origin.X, origin.Y), 
                     SpriteEffects.None,

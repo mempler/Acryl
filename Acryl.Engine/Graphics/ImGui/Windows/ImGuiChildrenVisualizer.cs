@@ -1,19 +1,38 @@
 using System.Collections.Generic;
-using System.Drawing;
 using Acryl.Engine.Graphics.Core;
 using Acryl.Engine.Utility;
 using ImGuiNET;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Color = System.Drawing.Color;
 
-
-namespace Acryl.Engine.Graphics.ImGui.Layouts.Debugger
+namespace Acryl.Engine.Graphics.ImGui.Windows
 {
     using ImGui = ImGuiNET.ImGui;
     
-    public class ImGuiVisualChildrenDebugger
+    public class ImGuiChildrenVisualizer : ImGuiWindow
     {
-        private void DrawFromParent(ImGuiRenderer renderer, IChildrenContainer<Drawable> parent)
+        public void Draw(GameBase game, ImGuiRenderer renderer)
         {
+            ImGui.Begin("");
+
+            ImGui.End();
+        }
+
+        protected internal override ImGuiWindowFlags WindowFlags => ImGuiWindowFlags.None;
+        protected internal override string Name => "Children Debugger";
+        
+        [DependencyResolved]
+        private MonoImGui MonoImGui { get; set; }
+                
+        [DependencyResolved]
+        private GameBase Game { get; set; }
+        
+        private void DrawFromParent(IChildrenContainer<Drawable> parent)
+        {
+            if (Game == null || MonoImGui == null)
+                return;
+            
             var childContainerListType = typeof(List<Drawable>);
             
             foreach (var child in parent.Children)
@@ -27,7 +46,7 @@ namespace Acryl.Engine.Graphics.ImGui.Layouts.Debugger
                 if (ImGui.IsItemHovered())
                 {
                     if (!child.HasTmpAltered) {
-                        child.TmpColor = Color.HotPink;
+                        child.TmpColor = Color.GreenYellow;
                         child.HasTmpAltered = true;
                     }
                     ImGui.BeginTooltip();
@@ -54,7 +73,7 @@ namespace Acryl.Engine.Graphics.ImGui.Layouts.Debugger
                             var vTex = (Texture2D) prop.GetValue(child);
 
                             if ((int) child.ImTex <= 0)
-                                child.ImTex = renderer.BindTexture(vTex);
+                                child.ImTex = MonoImGui.Renderer.BindTexture(vTex);
                             
                             ImGui.TextUnformatted($"{prop.Name}:"); ImGui.SameLine(150);
                             ImGui.Image(child.ImTex, new System.Numerics.Vector2(300, 150), 
@@ -70,7 +89,7 @@ namespace Acryl.Engine.Graphics.ImGui.Layouts.Debugger
                             var vTarget = (RenderTarget2D) prop.GetValue(child);
 
                              if ((int) child.ImTex <= 0)
-                                child.ImTex = renderer.BindTexture(vTarget);
+                                child.ImTex = MonoImGui.Renderer.BindTexture(vTarget);
 
                             ImGui.TextUnformatted($"{prop.Name}:"); ImGui.SameLine(150);
                             ImGui.Image(child.ImTex, new System.Numerics.Vector2(300, 150), 
@@ -98,7 +117,7 @@ namespace Acryl.Engine.Graphics.ImGui.Layouts.Debugger
                     
                     if (childContainerListType.IsAssignableFrom(prop.PropertyType))
                     {
-                        DrawFromParent(renderer, child);
+                        DrawFromParent(child);
                     }
                 }
 
@@ -106,14 +125,10 @@ namespace Acryl.Engine.Graphics.ImGui.Layouts.Debugger
             }
         }
         
-        public void Draw(GameBase game, ImGuiRenderer renderer)
+        protected override void Draw(GameTime gameTime)
         {
-            ImGui.Begin("Children Debugger");
-            lock (game.Children)
-            {
-                DrawFromParent(renderer, game);
-            }
-            ImGui.End();
+            lock (Game.Children)
+                DrawFromParent(Game);
         }
     }
 }
