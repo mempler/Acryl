@@ -20,7 +20,7 @@ namespace Acryl.Engine.Graphics.ImGui.Windows
 
         protected override void Draw(GameTime gameTime)
         {
-            if (MonoImGui == null)
+            if (MonoImGui == null || PostProcessor?.RenderTexture == null)
                 return;
             
             var wndSize = ImGuiNET.ImGui.GetWindowSize();

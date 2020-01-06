@@ -5,6 +5,8 @@ using System.Reflection;
 using Acryl.Engine.Audio;
 using Acryl.Engine.Graphics;
 using Acryl.Engine.Graphics.Core;
+using Acryl.Engine.Graphics.ImGui;
+using Acryl.Engine.Graphics.ImGui.Layouts;
 using Acryl.Engine.Stores;
 using Acryl.Engine.Utility;
 using Microsoft.Xna.Framework;
@@ -25,10 +27,13 @@ namespace Acryl.Engine
         protected Scene ActiveScene { get; set; } = new Scene(); // Empty Scene
         protected GraphicsDeviceManager GraphicsDeviceManager { get; }
         
+        protected MonoImGui ImGui { get; }
         protected PostProcessor PostProcessor { get; set; }
         protected bool PostProcessing { get; set; } = true;
         
+        
         private Tweener sceneTweener = new Tweener();
+        
 
         public GameBase()
         {
@@ -42,6 +47,8 @@ namespace Acryl.Engine
             IsFixedTimeStep = false;
             
             IsMouseVisible = true;
+            
+            ImGui = new MonoImGui();
         }
 
         public void SwitchScene(Scene scene, float duration, float delay = 0)
@@ -97,9 +104,12 @@ namespace Acryl.Engine
             Dependencies.Add(new TextureStore());
             Dependencies.Add(new EffectStore());
             Dependencies.Add(Dependencies);
-
+            
             Dependencies.Add(PostProcessor = new PostProcessor());
             
+            Dependencies.Add(ImGui);
+            Add(ImGui);
+
             Add(ActiveScene);
             Add(PostProcessor);
             Remove(PostProcessor);

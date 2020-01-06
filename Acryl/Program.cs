@@ -1,3 +1,5 @@
+using Acryl.Engine.Graphics;
+
 namespace Acryl
 {
     public static class Program

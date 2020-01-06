@@ -30,4 +30,8 @@
         <EmbeddedResource Remove="Resources\**\*.fx" />
         <EmbeddedResource Remove="Resources\**\*.bat" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Input" />
+    </ItemGroup>
 </Project>

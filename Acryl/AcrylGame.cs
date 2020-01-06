@@ -7,16 +7,16 @@ using Acryl.Graphics;
 using Acryl.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Acryl
 {
     public class AcrylGame : GameBase
     {
+        private ImGuiDebugger _debugger = new ImGuiDebugger();
         [DependencyResolved]
         private GraphicsDevice Device { get; set; }
         
-        private MonoImGui ImGui;
-
         public static string AcrylDirectory = Path.Combine(
             //Directory.GetParent(Environment.GetFolderPath(Environment.SpecialFolder.Personal)).FullName,
             ".acryl"
@@ -25,13 +25,9 @@ namespace Acryl
         [LoadAsync]
         private void Load(TextureStore store)
         {
-            ImGui = new MonoImGui();
-            Dependencies.Add(ImGui);
-            //Dependencies.Add(ImGui.Renderer);
-
-            Add(ImGui); // Load dependencies
-            ImGui.Add(new ImGuiDebugger()); // Attach Debugger
-            Remove(ImGui); // Remove from children.
+            // Attach Debugger
+            ImGui.Add(new ImGuiDebugger());
+            //Remove(ImGui); // Remove from children.
             
             Dependencies.Add(new SkinManager());
 
@@ -49,6 +45,7 @@ namespace Acryl
 
         }
 
+        private bool showDebug;
         protected override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
