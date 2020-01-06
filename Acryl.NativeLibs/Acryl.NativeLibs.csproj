@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     
     <PropertyGroup Label="Project">
-        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <TargetFramework>netstandard2.0</TargetFramework>
         <OutputType>Library</OutputType>
         <AssemblyTitle>Acryl Libraries</AssemblyTitle>
         <AssemblyName>ACryl.NativeLibs</AssemblyName>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageVersion>1.0.6</PackageVersion>
     </PropertyGroup>
 
     <PropertyGroup Label="Nuget">

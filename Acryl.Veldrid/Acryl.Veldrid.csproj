@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Veldrid" Version="4.7.0" />
+      <PackageReference Include="Veldrid.SPIRV" Version="1.0.12" />
+      <PackageReference Include="Veldrid.StartupUtilities" Version="4.7.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Acryl.Engine\Acryl.Engine.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Graphics" />
+    </ItemGroup>
+
+</Project>
